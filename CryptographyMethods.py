@@ -16,6 +16,7 @@ class CryptographyMethods:
                 "pbkdf2:sha256",
                 "pbkdf2:sha384",
                 "pbkdf2:sha512",
+                "bcrypt"
             ]
 
         def generate_password_hash(self, password, prov_salt: bytes = None):
@@ -55,6 +56,10 @@ class CryptographyMethods:
                     actual_method = f"$pbkdf2:{args}:{260000}"
                     return f"{actual_method}${salt}${h}"
 
+            elif self.algorithm == "bcrypt":
+                from bcrypt import hashpw, gensalt
+                return f"$bcrypt${hashpw(str(password).encode('utf-8'), gensalt())}"
+
             else:
                 return f"We don't support '{self.algorithm}' method yet. \n" \
                        f"Here are the supported methods : {self.supported_hash_methods}"
@@ -74,6 +79,7 @@ class CryptographyMethods:
                     return crypt_er.verify(secret, str(password))
                 except exceptions.VerifyMismatchError:
                     return False
+
             elif "$pbkdf2" in secret:
                 method, prov_salt, hashval = secret[1:].split("$", 2)
                 """
@@ -93,6 +99,13 @@ class CryptographyMethods:
                     self.generate_password_hash(password, prov_salt=prov_salt.encode("utf-8"))[1:].split("$", 2)[2],
                     hashval
                 )
+
+            elif "$bcrypt" in secret:
+                from bcrypt import hashpw
+                salt = f"$2b$12${secret[17:39]}".encode("utf-8")
+                hashed = f'$bcrypt${hashpw(str(password).encode("utf-8"), salt)}'
+                return secret == hashed
+
             else:
                 raise TypeError("Unsupported Hash-Type\nTry using the following\n"
                                 f"{self.supported_hash_methods}")
