@@ -11,7 +11,11 @@ class CryptographyMethods:
             self.algorithm = algorithm
             self.supported_hash_methods = [
                 "argon2id",
-                "pbkdf2:sha256"
+                "pbkdf2:sha1",
+                "pbkdf2:sha224",
+                "pbkdf2:sha256",
+                "pbkdf2:sha384",
+                "pbkdf2:sha512",
             ]
 
         def generate_password_hash(self, password, prov_salt: bytes = None):
@@ -28,7 +32,7 @@ class CryptographyMethods:
                 crypt_er = PasswordHasher()
                 return crypt_er.hash(str(password))
 
-            elif self.algorithm == "pbkdf2:sha256":
+            elif "pbkdf2" in self.algorithm:
                 from secrets import choice
                 from hashlib import pbkdf2_hmac
                 salt_chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"

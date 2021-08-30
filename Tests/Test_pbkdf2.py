@@ -7,6 +7,7 @@ from CryptographyMethods import CryptographyMethods
 if __name__ == '__main__':
 
     pbkdf2 = CryptographyMethods.Hashing("pbkdf2:sha256")
+    # You can change the argument to sha1, sha224, sha384, sha512
 
     """
     generate_hash_password(self, password: Any, prov_salt: Any = None) -> str
