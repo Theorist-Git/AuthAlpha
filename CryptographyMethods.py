@@ -16,7 +16,8 @@ class CryptographyMethods:
                 "pbkdf2:sha256",
                 "pbkdf2:sha384",
                 "pbkdf2:sha512",
-                "bcrypt"
+                "bcrypt",
+                "scrypt"
             ]
 
         def generate_password_hash(self, password, prov_salt: bytes = None):
@@ -59,6 +60,23 @@ class CryptographyMethods:
             elif self.algorithm == "bcrypt":
                 from bcrypt import hashpw, gensalt
                 return f"$bcrypt${hashpw(str(password).encode('utf-8'), gensalt())}"
+
+            elif self.algorithm == "scrypt":
+                from scrypt import hash
+                from secrets import choice
+                salt_chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
+                if not prov_salt:
+                    # Generating a random salt and encoding it to bytes
+                    salt = "".join(choice(salt_chars) for _ in range(16)).encode("utf-8")
+                    # Type-casting the inputted password to string and then encoding it to bytes.
+                    byte_password = str(password).encode("utf-8")
+                    hashed = hash(byte_password, salt).hex()
+                    return f"$scrypt$N=16384$r=8$p=1${salt}${hashed}"
+                else:
+                    salt = prov_salt  # In-case the user provides a salt, hashing is done using it. type(salt) is bytes
+                    byte_password = str(password).encode("utf-8")
+                    hashed = hash(byte_password, salt).hex()
+                    return f"$scrypt$N=16384$r=8$p=1${salt}${hashed}"
 
             else:
                 return f"We don't support '{self.algorithm}' method yet. \n" \
@@ -105,6 +123,12 @@ class CryptographyMethods:
                 salt = f"$2b$12${secret[17:39]}".encode("utf-8")
                 hashed = f'$bcrypt${hashpw(str(password).encode("utf-8"), salt)}'
                 return secret == hashed
+
+            elif "$scrypt" in secret:
+                from scrypt import hash
+                secret_data = secret[1:].split("$", 5)
+                hashed, prov_salt = secret_data[5], secret_data[4][2:-1]
+                return hashed == self.generate_password_hash(password, prov_salt=prov_salt)[1:].split("$", 5)[5]
 
             else:
                 raise TypeError("Unsupported Hash-Type\nTry using the following\n"

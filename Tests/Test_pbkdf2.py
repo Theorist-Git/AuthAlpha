@@ -13,17 +13,12 @@ if __name__ == '__main__':
     generate_hash_password(self, password: Any, prov_salt: Any = None) -> str
     Method will generate a pbkdf2 hash
     Parameters are kept default, salt will be generated randomly.
-    You can also provide your own salt but only with pbkdf2 algorithms, but that is not recommended.
+    You can also provide your own salt but only with pbkdf2 and scrypt algorithms, but that is not recommended.
     """
 
     hashed = pbkdf2.generate_password_hash("SuP#rS€cR€TPass")
     print(hashed)
 
-    print("When pass is correct -> ", pbkdf2.check_password_hash(hashed, "SuP#rS€cR€TPass"))  # Will return True
-    print("When pass is not correct -> ", pbkdf2.check_password_hash(hashed, "NotMyPassword"))  # Will return False
-
-    hashed = pbkdf2.generate_password_hash("SuP#rS€cR€TPass")
-    print(hashed)
     print("When pass is correct -> ", pbkdf2.check_password_hash(hashed, "SuP#rS€cR€TPass"))  # Will return True
     print("When pass is not correct -> ", pbkdf2.check_password_hash(hashed, "NotMyPassword"))  # Will return False
 

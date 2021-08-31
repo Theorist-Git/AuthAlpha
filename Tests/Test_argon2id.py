@@ -12,7 +12,7 @@ if __name__ == '__main__':
     generate_hash_password(self, password: Any, prov_salt: Any = None) -> str
     Method will generate a argon2 hash
     Parameters are kept default, salt will be generated randomly.
-    You can also provide your own salt but only with pbkdf2 algorithms, but that is not recommended.
+    You can also provide your own salt but only with pbkdf2 and scrypt algorithms, but that is not recommended.
     """
 
     hashed = argon.generate_password_hash("SuP#rS€cR€TPass")
