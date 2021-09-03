@@ -60,7 +60,7 @@ See [commit history](https://github.com/Theorist-Git/Cryptography-Methods/commit
 
 ## Contributing
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
-Also, for every algorithm you add or change, make the changes to CryptographyMethods only. Appropriately change the comments too.
+Also, for every algorithm you add or change, make the changes to AuthAlpha only. Appropriately change the comments too.
 A test file strictly name like 'Test_{Algorithm}.py' (regex === ^Test_[a-zA-Z0-9_]*\.py$) should be created which demonstrates and tests the working of the algorithm.
 
 ## License

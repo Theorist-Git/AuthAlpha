@@ -4,7 +4,7 @@ See license.txt
 """
 
 
-class CryptographyMethods:
+class AuthAlpha:
     class Hashing:
 
         def __init__(self, algorithm):
@@ -137,7 +137,7 @@ class CryptographyMethods:
 
 if __name__ == '__main__':
 
-    hashes_to_hashes = CryptographyMethods.Hashing("argon2id")
+    hashes_to_hashes = AuthAlpha.Hashing("argon2id")
     # This section illustrates common errors and their work-around
     # If you provide a hash digest which is not recognized Type error will be raised
     # check_hash("NOTRECOGNIZED", 1234567890)

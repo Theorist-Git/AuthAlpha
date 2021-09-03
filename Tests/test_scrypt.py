@@ -2,11 +2,11 @@
 Copyright (C) 2021 Mayank Vats
 See license.txt
 """
-from CryptographyMethods import CryptographyMethods
+from AuthAlpha import AuthAlpha
 
 if __name__ == '__main__':
 
-    scrypt = CryptographyMethods.Hashing("scrypt")
+    scrypt = AuthAlpha.Hashing("scrypt")
 
     """
     generate_hash_password(self, password: Any, prov_salt: Any = None) -> str
