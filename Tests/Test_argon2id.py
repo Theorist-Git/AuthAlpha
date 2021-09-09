@@ -6,7 +6,7 @@ from AuthAlpha import AuthAlpha
 
 if __name__ == '__main__':
 
-    argon = AuthAlpha.Hashing("argon2id")
+    argon = AuthAlpha.PassHashing("argon2id")
 
     """
     generate_hash_password(self, password: Any, prov_salt: Any = None) -> str

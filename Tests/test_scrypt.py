@@ -6,7 +6,7 @@ import time
 from AuthAlpha import AuthAlpha
 
 if __name__ == '__main__':
-    scrypt = AuthAlpha.Hashing("scrypt")
+    scrypt = AuthAlpha.PassHashing("scrypt")
 
     """
     generate_hash_password(self, password: Any, prov_salt: Any = None) -> str

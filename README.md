@@ -46,6 +46,9 @@ Contributor names and contact info
 
 ## Version History
 See [commit history](https://github.com/Theorist-Git/Cryptography-Methods/commits/master)
+* 0.6
+  * Added functionality to generate and check hashes of files.
+  * AuthAlpha.py hexdigests of this commit are in the file Integrity.txt. It will be updated with every commit.
 * 0.5
   * Added customizable cost parameters for bcrypt, scrypt and PBKDF2:SHA family.
 * 0.4
@@ -66,6 +69,12 @@ A test file strictly name like 'Test_{Algorithm}.py' (regex === ^Test_[a-zA-Z0-9
 ## Documentation
 ~**TBD**~
 In the meanwhile you can review the code, it is fully commented.
+
+## PostScriptrum
+
+* After downloading, make sure you have the un-tampered files with you, check Integrity.txt to check the hashes of the
+AuthAlpha file match with the ones you have. If they do not match, contact the author(s) immediately at
+testpass.py@gmail.com.
 
 ## License
 

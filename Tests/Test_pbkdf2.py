@@ -7,7 +7,7 @@ from AuthAlpha import AuthAlpha
 
 if __name__ == '__main__':
 
-    pbkdf2 = AuthAlpha.Hashing("pbkdf2:sha256")
+    pbkdf2 = AuthAlpha.PassHashing("pbkdf2:sha256")
     # You can change the argument to sha1, sha224, sha384, sha512
 
     """

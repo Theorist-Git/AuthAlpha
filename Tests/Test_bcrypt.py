@@ -7,7 +7,7 @@ from AuthAlpha import AuthAlpha
 
 if __name__ == '__main__':
 
-    bcrypt = AuthAlpha.Hashing("bcrypt")
+    bcrypt = AuthAlpha.PassHashing("bcrypt")
 
     """
     generate_hash_password(self, password: Any, prov_salt: Any = None) -> str
