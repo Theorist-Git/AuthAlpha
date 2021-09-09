@@ -5,8 +5,6 @@ A python package that provides various hashing algorithms with support for user 
 out there for implementing hashing algorithms but not many packages have built-in support for authentication, so I decided
 to make one myself. Feel free to use it in your projects under the terms mentioned in license.txt.
 
-Implementation of various encryption algorithms have also been provided. For every algorithm, potential flaws, uses
-and best practices are discussed to the best of my knowledge.
 
 ## Getting Started
 
@@ -48,6 +46,8 @@ Contributor names and contact info
 
 ## Version History
 See [commit history](https://github.com/Theorist-Git/Cryptography-Methods/commits/master)
+* 0.5
+  * Added customizable cost parameters for bcrypt, scrypt and PBKDF2:SHA family.
 * 0.4
   * Added support for scrypt
 * 0.3
@@ -62,6 +62,10 @@ See [commit history](https://github.com/Theorist-Git/Cryptography-Methods/commit
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
 Also, for every algorithm you add or change, make the changes to AuthAlpha only. Appropriately change the comments too.
 A test file strictly name like 'Test_{Algorithm}.py' (regex === ^Test_[a-zA-Z0-9_]*\.py$) should be created which demonstrates and tests the working of the algorithm.
+
+## Documentation
+~**TBD**~
+In the meanwhile you can review the code, it is fully commented.
 
 ## License
 

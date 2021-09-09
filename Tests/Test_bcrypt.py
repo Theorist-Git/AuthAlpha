@@ -2,6 +2,7 @@
 Copyright (C) 2021 Mayank Vats
 See license.txt
 """
+import time
 from AuthAlpha import AuthAlpha
 
 if __name__ == '__main__':
@@ -26,3 +27,18 @@ if __name__ == '__main__':
     hashed = bcrypt.generate_password_hash(1234567890)
     print(hashed)
     print("When pass is correct -> ", bcrypt.check_password_hash(hashed, 1234567890))  # Will return True
+
+    # You can also provide you own cost parameter (COST_FACTOR for bcrypt), although the author has chosen
+    # parameters sensible in general, everyone has different needs. You need to be careful here,
+    # as a high  cost factor will take forever to generate and check hashes. See an example below.
+
+    # For cost factor 16 in bcrypt:
+    start = time.time()
+    custom_hashed = bcrypt.generate_password_hash("SuP#rS€cR€TPass", cost=16)
+    end = time.time()
+    print("Custom Hash", custom_hashed)
+    print("Time taken for 16 rounds = ", end - start)
+    # 16 rounds take ~3.5 seconds on a machine with 11th Gen Intel(R) CORE(TM) i7-1165G7 @ 2.80 GHz
+
+    print("When pass is correct -> ", bcrypt.check_password_hash(custom_hashed, "SuP#rS€cR€TPass"))  # Will return True
+    print("When pass is not correct -> ", bcrypt.check_password_hash(custom_hashed, "NotMyPassword"))  # Will return False
