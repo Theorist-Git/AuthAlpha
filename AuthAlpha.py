@@ -15,7 +15,11 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License v3
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """
-import importlib
+
+__author__ = "Mayank Vats"
+__email__ = "testpass.py@gmail.com"
+__Description__ = "AuthAlpha: A package to manage Hashing for your projects."
+__version__ = 0.6
 
 
 class AuthAlpha:
@@ -87,8 +91,9 @@ class AuthAlpha:
 
             elif self.algorithm == "bcrypt":
                 from bcrypt import hashpw, gensalt
+                DEFAULT_ITERATIONS = 13  # 2^13
                 if not cost:
-                    return f"$bcrypt${hashpw(str(password).encode('utf-8'), gensalt(13))}"
+                    return f"$bcrypt${hashpw(str(password).encode('utf-8'), gensalt(DEFAULT_ITERATIONS))}"
                 else:
                     return f"$bcrypt${hashpw(str(password).encode('utf-8'), gensalt(cost))}"
 
