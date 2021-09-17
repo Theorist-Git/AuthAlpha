@@ -2,11 +2,12 @@
 Copyright (C) 2021 Mayank Vats
 See license.txt
 """
-from AuthAlpha import AuthAlpha
+
+from AuthAlpha import PassHashing
 
 if __name__ == '__main__':
 
-    argon = AuthAlpha.PassHashing("argon2id")
+    argon = PassHashing("argon2id")
 
     """
     generate_hash_password(self, password: Any, prov_salt: Any = None) -> str

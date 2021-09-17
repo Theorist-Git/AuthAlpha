@@ -2,12 +2,13 @@
 Copyright (C) 2021 Mayank Vats
 See license.txt
 """
+
 import time
-from AuthAlpha import AuthAlpha
+from AuthAlpha import PassHashing
 
 if __name__ == '__main__':
 
-    bcrypt = AuthAlpha.PassHashing("bcrypt")
+    bcrypt = PassHashing("bcrypt")
 
     """
     generate_hash_password(self, password: Any, prov_salt: Any = None) -> str
@@ -37,8 +38,9 @@ if __name__ == '__main__':
     custom_hashed = bcrypt.generate_password_hash("SuP#rS€cR€TPass", cost=16)
     end = time.time()
     print("Custom Hash", custom_hashed)
-    print("Time taken for 16 rounds = ", end - start)
+    print("Time taken for 2^16 rounds = ", end - start)
     # 16 rounds take ~3.5 seconds on a machine with 11th Gen Intel(R) CORE(TM) i7-1165G7 @ 2.80 GHz
 
     print("When pass is correct -> ", bcrypt.check_password_hash(custom_hashed, "SuP#rS€cR€TPass"))  # Will return True
-    print("When pass is not correct -> ", bcrypt.check_password_hash(custom_hashed, "NotMyPassword"))  # Will return False
+    print("When pass is not correct -> ", bcrypt.check_password_hash(custom_hashed, "NotMyPassword"))
+    # Will return False

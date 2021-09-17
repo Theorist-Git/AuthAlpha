@@ -2,12 +2,13 @@
 Copyright (C) 2021 Mayank Vats
 See license.txt
 """
+
 import time
-from AuthAlpha import AuthAlpha
+from AuthAlpha import PassHashing
 
 if __name__ == '__main__':
 
-    pbkdf2 = AuthAlpha.PassHashing("pbkdf2:sha256")
+    pbkdf2 = PassHashing("pbkdf2:sha256")
     # You can change the argument to sha1, sha224, sha384, sha512
 
     """
@@ -49,4 +50,5 @@ if __name__ == '__main__':
     # 16 rounds take ~5.5 seconds on a machine with 11th Gen Intel(R) CORE(TM) i7-1165G7 @ 2.80 GHz
 
     print("When pass is correct -> ", pbkdf2.check_password_hash(custom_hashed, "SuP#rS€cR€TPass"))  # Will return True
-    print("When pass is not correct -> ", pbkdf2.check_password_hash(custom_hashed, "NotMyPassword"))  # Will return False
+    print("When pass is not correct -> ", pbkdf2.check_password_hash(custom_hashed, "NotMyPassword"))
+    # Will return False

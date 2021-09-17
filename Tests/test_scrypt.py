@@ -2,11 +2,13 @@
 Copyright (C) 2021 Mayank Vats
 See license.txt
 """
+
 import time
-from AuthAlpha import AuthAlpha
+from AuthAlpha import PassHashing
 
 if __name__ == '__main__':
-    scrypt = AuthAlpha.PassHashing("scrypt")
+
+    scrypt = PassHashing("scrypt")
 
     """
     generate_hash_password(self, password: Any, prov_salt: Any = None) -> str
