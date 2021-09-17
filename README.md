@@ -48,11 +48,11 @@ Contributor names and contact info
 
 ## Version History
 See [commit history](https://github.com/Theorist-Git/Cryptography-Methods/commits/master)
-* **0.9a**
+* **0.6.3a**
   * Added project to PyPI.
-* **0.8a**
+* **0.6.2a**
   *  Fixed scrypt non-custom-hash, split the class into two to improve performance
-* **0.7a**
+* **0.6.1a**
   * Minor Code Optimizations 
 * **0.6a**
   * Added functionality to generate and check hashes of files.
