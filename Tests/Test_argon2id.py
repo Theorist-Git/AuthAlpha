@@ -3,7 +3,7 @@ Copyright (C) 2021 Mayank Vats
 See license.txt
 """
 
-from AuthAlpha import PassHashing
+from AuthAlpha.Password_Hashing import PassHashing
 
 if __name__ == '__main__':
 

@@ -147,12 +147,12 @@ class PassHashing:
             """
             returns a list like this:
             ['pbkdf2:sha256:260000', "b'eiV3F72mPyVrttd8'", 'hash']
-            
+
             Now the problem is that it returns our originally bytes-type object as a string like so:
             "b'eiV3F72mPyVrttd8'" which when encoded to bytes, returns a bytes-like object with the 
             'b' and the apostrophes. This results in hashes not matching because the new salt is now
             b'"b'eiV3F72mPyVrttd8'"'.
-            
+
             A work-around for that is to slice the string as shown below in the object 'prov_salt'
             """
             prov_salt = prov_salt[2:-1]
@@ -181,47 +181,6 @@ class PassHashing:
         else:
             raise TypeError("Unsupported Hash-Type\nTry using the following\n"
                             f"{self.supported_hash_methods}")
-
-
-class NonPassHashing:
-
-    def __init__(self, algorithm):
-        self.algorithm = algorithm
-        self.supported_hash_methods = [
-            "sha1",
-            "sha224",
-            "sha256",
-            "sha384",
-            "sha512",
-            "sha3_224",
-            "sha3_256",
-            "sha3_384",
-            "sha3_512"
-        ]
-
-    def generate_file_hash(self, file):
-        if self.algorithm in self.supported_hash_methods:
-            import importlib
-            package = importlib.__import__("hashlib", fromlist=self.supported_hash_methods)
-            h = getattr(package, self.algorithm)()
-            f = open(file, "rb")
-
-            # loop till the end of the file
-            chunk = 0
-            while chunk != b'':
-                # read only 1024 bytes at a time
-                chunk = f.read(1024)
-                h.update(chunk)
-
-            return h.hexdigest()
-
-        else:
-            return f"We don't support '{self.algorithm}' method yet. \n" \
-                   f"Here are the supported methods : {self.supported_hash_methods}"
-
-    def check_file_hash(self, file, digest):
-        if self.algorithm in self.supported_hash_methods:
-            return self.generate_file_hash(file) == digest
 
 
 if __name__ == '__main__':
