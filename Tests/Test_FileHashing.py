@@ -6,9 +6,9 @@ See license.txt
 from AuthAlpha import NonPassHashing
 
 hash_list = NonPassHashing("algo").supported_hash_methods
-f1 = "C:\\Users\\mayan\\Desktop\\languages\\Python 3.9\\Projects\\Cryptography\\Algorithm_Implementations\\license.txt"
-f2 = "C:\\Users\\mayan\\Desktop\\languages\\Python 3.9\\Projects\\Cryptography\\Algorithm_Implementations\\README.md"
-f3 = "C:\\Users\\mayan\\Desktop\\languages\\Python 3.9\\Projects\\Cryptography\\Algorithm_Implementations\\AuthAlpha.py"
+f1 = "C:\\Users\\mayan\\Desktop\\languages\\Python 3.9\\Projects\\Cryptography\\AuthAlpha\\license.txt"
+f2 = "C:\\Users\\mayan\\Desktop\\languages\\Python 3.9\\Projects\\Cryptography\\AuthAlpha\\README.md"
+f3 = "C:\\Users\\mayan\\Desktop\\languages\\Python 3.9\\Projects\\Cryptography\\AuthAlpha\\AuthAlpha.py"
 
 print("----------------------------------------------Hashes for f1----------------------------------------------")
 for i in hash_list:

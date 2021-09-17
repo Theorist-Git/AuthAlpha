@@ -19,7 +19,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 __author__ = "Mayank Vats"
 __email__ = "testpass.py@gmail.com"
 __Description__ = "AuthAlpha: A package to manage Hashing for your projects."
-__version__ = "0.6alpha"
+__version__ = "0.8alpha"
 
 
 class PassHashing:
