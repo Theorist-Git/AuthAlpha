@@ -3,7 +3,7 @@ from distutils.core import setup
 setup(
     name='AuthAlpha',
     packages=['AuthAlpha'],
-    version='0.9a',
+    version='0.6.3-alpha',
     license='GNU GPLv3',
     description='A python cryptography package to manage authentication and to ensure integrity of files.',
     author='Mayank Vats',
