@@ -9,7 +9,7 @@ setup(
     author='Mayank Vats',
     author_email='testpass.py@gmail.com',
     url='https://github.com/Theorist-Git/AuthAlpha',
-    download_url='https://github.com/user/reponame/archive/v_01.tar.gz',  # I explain this later on
+    download_url='https://github.com/Theorist-Git/AuthAlpha/archive/refs/tags/v0.6.3-alpha.tar.gz',
     keywords=['AUTHENTICATION', 'CRYPTOGRAPHY', 'HASHING'],
     install_requires=[
         'argon2-cffi',
