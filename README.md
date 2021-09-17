@@ -1,4 +1,4 @@
-# AuthAlpha
+# [AuthAlpha]((https://pypi.org/project/AuthAlpha/))
 ## Description
 
 A python package that provides various hashing algorithms with support for user authentication. There are a lot of libraries
