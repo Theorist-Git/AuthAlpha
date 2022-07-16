@@ -10,7 +10,7 @@ setup(
     author='Mayank Vats',
     author_email='dev-theorist.e5xna@simplelogin.com',
     url='https://github.com/Theorist-Git/AuthAlpha',
-    download_url='https://github.com/Theorist-Git/AuthAlpha/archive/refs/tags/v0.6.3-alpha.tar.gz',
+    download_url='https://github.com/Theorist-Git/AuthAlpha/archive/refs/tags/v0.7-alpha.tar.gz',
     keywords=['AUTHENTICATION', 'CRYPTOGRAPHY', 'HASHING'],
     install_requires=[
         'argon2-cffi',
