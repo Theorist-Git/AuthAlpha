@@ -1,2 +1,6 @@
 *.pyc
 .idea
+dist
+MANIFEST
+setup.cfg
+setup.py

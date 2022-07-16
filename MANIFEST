@@ -2,5 +2,6 @@
 setup.cfg
 setup.py
 AuthAlpha\Non_Password_Hashing.py
+AuthAlpha\OTPMethods.py
 AuthAlpha\Password_Hashing.py
 AuthAlpha\__init__.py
