@@ -47,7 +47,9 @@ Contributor names and contact info
 
 ## Version History
 See [commit history](https://github.com/Theorist-Git/Cryptography-Methods/commits/master)
-* **0.7a**
+* **0.8.0a**
+  * Added Encryption and Decryption support in OTPMethods.py for TOTP tokens.
+* **0.7.0a**
   * Added OTP methods, updated email and README.md.
 * **0.6.3a**
   * Added project to PyPI.
@@ -57,7 +59,7 @@ See [commit history](https://github.com/Theorist-Git/Cryptography-Methods/commit
   * Minor Code Optimizations 
 * **0.6a**
   * Added functionality to generate and check hashes of files.
-  * AuthAlpha.py hexdigests of this commit are in the file Integrity.txt. It will be updated with every commit.
+  * AuthAlpha.py SHA256 hash of this commit are in the file Integrity.txt. It will be updated with every commit.
 * **0.5a**
   * Added customizable cost parameters for bcrypt, scrypt and PBKDF2:SHA family.
 * **0.4a**

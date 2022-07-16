@@ -42,7 +42,7 @@ if __name__ == '__main__':
     print("Custom Hash", custom_hashed)
 
     print("Time taken for 20 Million rounds = ", end - start)
-    # 16 rounds take ~5.5 seconds on a machine with 11th Gen Intel(R) CORE(TM) i7-1165G7 @ 2.80 GHz
+    # 20 million rounds take ~5.5 seconds on a machine with 11th Gen Intel(R) CORE(TM) i7-1165G7 @ 2.80 GHz
 
     print("When pass is correct -> ", pbkdf2.check_password_hash(custom_hashed, "SuP#rS€cR€TPass"))  # Will return True
     print("When pass is not correct -> ", pbkdf2.check_password_hash(custom_hashed, "NotMyPassword"))
