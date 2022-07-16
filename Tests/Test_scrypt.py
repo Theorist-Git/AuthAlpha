@@ -1,8 +1,3 @@
-"""
-Copyright (C) 2021 Mayank Vats
-See license.txt
-"""
-
 import time
 from AuthAlpha.Password_Hashing import PassHashing
 

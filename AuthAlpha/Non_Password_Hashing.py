@@ -1,5 +1,5 @@
 """
-Copyright (C) 2021 Mayank Vats
+Copyright (C) 2021-2022 Mayank Vats
 See license.txt
 
 This program is free software: you can redistribute it and/or modify
@@ -14,12 +14,13 @@ GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License v3
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
-"""
 
 __author__ = "Mayank Vats"
-__email__ = "testpass.py@gmail.com"
-__Description__ = "AuthAlpha: A package to manage Hashing for your projects."
-__version__ = "0.8alpha"
+__email__ = "dev-theorist.e5xna@simplelogin.com"
+__Description__ = "AuthAlpha: A package to manage Hashing and OTP generation."
+__version__ = "0.7alpha"
+
+"""
 
 
 class NonPassHashing:

@@ -3,18 +3,20 @@ from distutils.core import setup
 setup(
     name='AuthAlpha',
     packages=['AuthAlpha'],
-    version='0.6.3-alpha',
+    version='0.7-alpha',
     license='GNU GPLv3',
-    description='A python cryptography package to manage authentication and to ensure integrity of files.',
+    description='A python abstraction to generate and authenticate hashes of passwords and files of any type. The '
+                'package can also be used to implement classic and Time Based OTPs.',
     author='Mayank Vats',
-    author_email='testpass.py@gmail.com',
+    author_email='dev-theorist.e5xna@simplelogin.com',
     url='https://github.com/Theorist-Git/AuthAlpha',
     download_url='https://github.com/Theorist-Git/AuthAlpha/archive/refs/tags/v0.6.3-alpha.tar.gz',
     keywords=['AUTHENTICATION', 'CRYPTOGRAPHY', 'HASHING'],
     install_requires=[
         'argon2-cffi',
         'bcrypt',
-        'scrypt'
+        'scrypt',
+        'pyotp'
     ],
     classifiers=[
         'Development Status :: 3 - Alpha',

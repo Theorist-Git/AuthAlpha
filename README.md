@@ -1,10 +1,9 @@
 # [AuthAlpha]((https://pypi.org/project/AuthAlpha/))
+[![Downloads](https://static.pepy.tech/personalized-badge/authalpha?period=total&units=international_system&left_color=black&right_color=orange&left_text=Downloads)](https://pepy.tech/project/authalpha)
 ## Description
 
-A python package that provides various hashing algorithms with support for user authentication. There are a lot of libraries
-out there for implementing hashing algorithms but not many packages have built-in support for authentication, so I decided
-to make one myself. Feel free to use it in your projects under the terms mentioned in license.txt. This package can also
-be used to generate and check hashes for all types of files. Hope this package helps you!
+A python abstraction to generate and authenticate hashes of passwords and files of any type.
+The package can also be used to implement classic and Time Based OTPs.
 
 
 ## Getting Started
@@ -37,17 +36,19 @@ you might encounter.
 
 ## Contributing
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
-Also, for every algorithm you add or change, make the changes to AuthAlpha only. Appropriately change the comments too.
-A test file strictly name like 'Test_{Algorithm}.py' should be created which demonstrates and tests the working of the algorithm.
+Also, for every algorithm you add or change, appropriately change the comments too.
+Add a file named like 'Test_{Algorithm}.py' under 'Tests' directory to demonstrate and test the working of the algorithm.
 
 ## Author(s)
 
 Contributor names and contact info
 * Mayank vats : [Theorist-git](https://github.com/Theorist-Git)
-  * Email: testpass.py@gmail.com
+  * Email: dev-theorist.e5xna@simplelogin.com
 
 ## Version History
 See [commit history](https://github.com/Theorist-Git/Cryptography-Methods/commits/master)
+* **0.7a**
+  * Added OTP methods, updated email and README.md.
 * **0.6.3a**
   * Added project to PyPI.
 * **0.6.2a**
@@ -72,17 +73,17 @@ See [commit history](https://github.com/Theorist-Git/Cryptography-Methods/commit
 * **P.S: 0.1a means version 0.1 alpha**
 
 ## Documentation
-~**TBD**~
+**TBD**
 In the meanwhile you can review the code, it is fully commented.
 
 ## PostScriptrum
 
 * After downloading, make sure you have the un-tampered files with you, check Integrity.txt to check the hashes of the
 AuthAlpha file match with the ones you have. If they do not match, contact the author(s) immediately at
-testpass.py@gmail.com.
+dev-theorist.e5xna@simplelogin.com.
 
 ## License
 
 This project is licensed under the [GNU GPLv3](https://choosealicense.com/licenses/gpl-3.0/#) License - see LICENSE.txt file for more details.
 
-Copyright (C) 2021 Mayank Vats
+Copyright (C) 2021-2022 Mayank Vats
