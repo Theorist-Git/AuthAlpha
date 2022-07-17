@@ -4,11 +4,12 @@ hash_list = NonPassHashing("algo").supported_hash_methods
 print("List of supported hashes: ", hash_list)
 
 license_path = "C:\\Users\\mayan\\Desktop\\languages\\Python 3.9\\Projects\\Cryptography\\AuthAlpha\\license.txt"
-f1 = "C:\\Users\\mayan\\Desktop\\languages\\Python " \
-     "3.9\\Projects\\Cryptography\\AuthAlpha\\AuthAlpha\\Password_Hashing.py "
-f2 = "C:\\Users\\mayan\\Desktop\\languages\\Python " \
-     "3.9\\Projects\\Cryptography\\AuthAlpha\\AuthAlpha\\Non_Password_Hashing.py "
-f3 = "C:\\Users\\mayan\\Desktop\\languages\\Python 3.9\\Projects\\Cryptography\\AuthAlpha\\AuthAlpha\\OTPMethods.py"
+pass_hashing = "C:\\Users\\mayan\\Desktop\\languages\\Python " \
+               "3.9\\Projects\\Cryptography\\AuthAlpha\\AuthAlpha\\Password_Hashing.py "
+non_pass_hashing = "C:\\Users\\mayan\\Desktop\\languages\\Python " \
+                    "3.9\\Projects\\Cryptography\\AuthAlpha\\AuthAlpha\\Non_Password_Hashing.py "
+otp_methods = "C:\\Users\\mayan\\Desktop\\languages\\Python " \
+              "3.9\\Projects\\Cryptography\\AuthAlpha\\AuthAlpha\\OTPMethods.py "
 
 hashed = NonPassHashing('sha256')
 print("License.txt SHA256 hash", hashed.generate_file_hash(license_path))
@@ -25,25 +26,39 @@ print(hashed.check_file_hash(license_path, "2c7498404231e3f980b42756c06de5f58cfd
 # to ensure that the file hasn't been tampered with. I will also now be providing SHA256 hashes of relavent
 # files in Integrity.txt file.
 
-print("Hashes of f1,2,3: ")
+print("Hashes of pass_hashing,2,3: ")
+
+f = open(r"C:\Users\mayan\Desktop\languages\Python 3.9\Projects\Cryptography\AuthAlpha\Integrity.txt", "w")
+updated_hash = (
+    "Hash for Password_Hashing.py:\n"
+    f"sha256 : {NonPassHashing('sha256').generate_file_hash(pass_hashing)}"
+    "\n----------------------------------------------------------------------------"
+    "\n\n"
+    "Hash for Non_Password_Hashing.py:\n"
+    f"sha256 : {NonPassHashing('sha256').generate_file_hash(non_pass_hashing)}"
+    "\n----------------------------------------------------------------------------"
+    "\n\n"
+    "Hash for OTPMethods.py:\n"
+    f"sha256 : {NonPassHashing('sha256').generate_file_hash(otp_methods)}"
+    "\n----------------------------------------------------------------------------"
+)
+f.write(updated_hash)
+f.close()
 
 print("--------------------------------------Hashes for Password_Hashing.py----------------------------------------")
 for k in hash_list:
-
     hashed = NonPassHashing(k)
-    h = hashed.generate_file_hash(f1)
+    h = hashed.generate_file_hash(pass_hashing)
     print(k, ":", h)
 
 print("--------------------------------------Hashes for Non_Password_Hashing.py--------------------------------------")
 for k in hash_list:
-
     hashed = NonPassHashing(k)
-    h = hashed.generate_file_hash(f2)
+    h = hashed.generate_file_hash(non_pass_hashing)
     print(k, ":", h)
 
 print("--------------------------------------Hashes for OTPMethods.py--------------------------------------")
 for k in hash_list:
-
     hashed = NonPassHashing(k)
-    h = hashed.generate_file_hash(f3)
+    h = hashed.generate_file_hash(otp_methods)
     print(k, ":", h)

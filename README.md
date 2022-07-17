@@ -47,6 +47,8 @@ Contributor names and contact info
 
 ## Version History
 See [commit history](https://github.com/Theorist-Git/Cryptography-Methods/commits/master)
+* **0.8.1a**
+  * pbkdf2 code optimizations, re-wrote tests.
 * **0.8.0a**
   * Added Encryption and Decryption support in OTPMethods.py for TOTP tokens.
 * **0.7.0a**

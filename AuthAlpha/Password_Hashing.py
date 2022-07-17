@@ -18,7 +18,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 __author__ = "Mayank Vats"
 __email__ = "dev-theorist.e5xna@simplelogin.com"
 __Description__ = "AuthAlpha: A package to manage Hashing and OTP generation."
-__version__ = "0.8.0alpha"
+__version__ = "0.8.1alpha"
 
 """
 
@@ -40,54 +40,61 @@ class PassHashing:
 
     def generate_password_hash(self, password, cost: int = None, prov_salt: bytes = None):
         """
-        This method generates a hash pertaining to a specified algorithm,
-        see supported_hash_algorithms.
         :param cost: Specify number of iterations for a certain algorithm,
-        default values are chosen sensibly but you can still change them.
+        default values are chosen sensibly, but you can still change them.
         (NOT APPLICABLE FOR ARGON2ID(TBD))
         :param password: type(password) is str
         :param prov_salt: (optional) provide a bytes-like salt for hashing
         only applicable for pbkdf2 hashes.
         :return: str(hash)
+        This method generates a hash pertaining to a specified algorithm,
+        see supported_hash_algorithms.
         """
+
         if self.algorithm == "argon2id":
             from argon2 import PasswordHasher
             crypt_er = PasswordHasher()
             return crypt_er.hash(str(password))
 
-        elif "pbkdf2" in self.algorithm:
+        elif self.algorithm.startswith("pbkdf2:"):
             from secrets import choice
             from hashlib import pbkdf2_hmac
-            salt_chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
+            SALT_CHARS = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
             DEFAULT_ITERATIONS = 300000
+
             if not prov_salt:
                 # Generating a random salt and encoding it to bytes
-                salt = "".join(choice(salt_chars) for _ in range(16)).encode("utf-8")
+                salt = "".join(choice(SALT_CHARS) for _ in range(16)).encode("utf-8")
                 # Type-casting the inputted password to string and then encoding it to bytes.
                 byte_password = str(password).encode("utf-8")
-                args = self.algorithm[7:].split(":").pop(0)
-                # self.algorithm[7:].split(":") returns a list with only one element, pop(0) returns that element
-                # The above args object will contain the info on whether algorithm is SHA256 or SHA512
-                if not cost:
-                    h = pbkdf2_hmac(args, byte_password, salt, DEFAULT_ITERATIONS).hex()  # Default rounds of pbkdf2
-                    actual_method = f"$pbkdf2:{args}:{DEFAULT_ITERATIONS}"
-                    return f"{actual_method}${salt}${h}"
-                else:
-                    h = pbkdf2_hmac(args, byte_password, salt, cost).hex()  # specified number of rounds
-                    actual_method = f"$pbkdf2:{args}:{cost}"
-                    return f"{actual_method}${salt}${h}"
-            else:
-                salt = prov_salt  # In-case the user provides a salt, hashing is done using it. type(salt) is bytes
-                byte_password = str(password).encode("utf-8")
-                args = self.algorithm[7:].split(":").pop(0)
+                # self.algorithm[7:].split(":") returns a list like this: ['pbkdf2', 'sha256']
+                args = self.algorithm.split(":")[1]
+
+                # Default rounds of pbkdf2
                 if not cost:
                     h = pbkdf2_hmac(args, byte_password, salt, DEFAULT_ITERATIONS).hex()
                     actual_method = f"$pbkdf2:{args}:{DEFAULT_ITERATIONS}"
-                    return f"{actual_method}${salt}${h}"
+                    return f"{actual_method}${salt.decode('utf-8')}${h}"
+
+                # Custom rounds of pbkdf2
                 else:
                     h = pbkdf2_hmac(args, byte_password, salt, cost).hex()  # specified number of rounds
                     actual_method = f"$pbkdf2:{args}:{cost}"
-                    return f"{actual_method}${salt}${h}"
+                    return f"{actual_method}${salt.decode('utf-8')}${h}"
+
+            else:
+                # In-case the user provides a salt, hashing is done using it. type(salt) is bytes
+                byte_password = str(password).encode("utf-8")
+                args = self.algorithm.split(":")[1]
+
+                if not cost:
+                    h = pbkdf2_hmac(args, byte_password, prov_salt, DEFAULT_ITERATIONS).hex()
+                    actual_method = f"$pbkdf2:{args}:{DEFAULT_ITERATIONS}"
+                    return f"{actual_method}${prov_salt.decode('utf-8')}${h}"
+                else:
+                    h = pbkdf2_hmac(args, byte_password, prov_salt, cost).hex()  # specified number of rounds
+                    actual_method = f"$pbkdf2:{args}:{cost}"
+                    return f"{actual_method}${prov_salt.decode('utf-8')}${h}"
 
         elif self.algorithm == "bcrypt":
             from bcrypt import hashpw, gensalt
@@ -100,11 +107,11 @@ class PassHashing:
         elif self.algorithm == "scrypt":
             from scrypt import hash
             from secrets import choice
-            salt_chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
+            SALT_CHARS = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
             DEFAULT_ITERATIONS = 14  # 2^14
             if not prov_salt:
                 # Generating a random salt and encoding it to bytes
-                salt = "".join(choice(salt_chars) for _ in range(16)).encode("utf-8")
+                salt = "".join(choice(SALT_CHARS) for _ in range(16)).encode("utf-8")
                 # Type-casting the inputted password to string and then encoding it to bytes.
                 byte_password = str(password).encode("utf-8")
                 if not cost:
@@ -145,22 +152,10 @@ class PassHashing:
 
         elif "$pbkdf2" in secret:
             method, prov_salt, hashval = secret[1:].split("$", 2)
-            """
-            returns a list like this:
-            ['pbkdf2:sha256:260000', "b'eiV3F72mPyVrttd8'", 'hash']
-
-            Now the problem is that it returns our originally bytes-type object as a string like so:
-            "b'eiV3F72mPyVrttd8'" which when encoded to bytes, returns a bytes-like object with the 
-            'b' and the apostrophes. This results in hashes not matching because the new salt is now
-            b'"b'eiV3F72mPyVrttd8'"'.
-
-            A work-around for that is to slice the string as shown below in the object 'prov_salt'
-            """
-            prov_salt = prov_salt[2:-1]
             import hmac
             return hmac.compare_digest(
                 self.generate_password_hash(password,
-                                            cost=int(method[14:]),
+                                            cost=int(method.split(":")[2]),
                                             prov_salt=prov_salt.encode("utf-8"))[1:].split("$", 2)[2],
                 hashval
             )

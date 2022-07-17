@@ -34,7 +34,7 @@ if __name__ == '__main__':
     end = time.time()
     print("Custom Hash", custom_hashed)
     print("Time taken for 2^16 rounds = ", end - start)
-    # 16 rounds take ~3.5 seconds on a machine with 11th Gen Intel(R) CORE(TM) i7-1165G7 @ 2.80 GHz
+    # 2^16 rounds take ~3.5 seconds on a machine with 11th Gen Intel(R) CORE(TM) i7-1165G7 @ 2.80 GHz
 
     print("When pass is correct -> ", bcrypt.check_password_hash(custom_hashed, "SuP#rS€cR€TPass"))  # Will return True
     print("When pass is not correct -> ", bcrypt.check_password_hash(custom_hashed, "NotMyPassword"))
