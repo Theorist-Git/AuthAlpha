@@ -47,6 +47,9 @@ Contributor names and contact info
 
 ## Version History
 See [commit history](https://github.com/Theorist-Git/Cryptography-Methods/commits/master)
+* **0.8.2a**
+  * Introduced stricter type casting to PassHashing class resulting in cleaner code
+    and lower chances of runtime errors.
 * **0.8.1a**
   * pbkdf2 code optimizations, re-wrote tests.
 * **0.8.0a**

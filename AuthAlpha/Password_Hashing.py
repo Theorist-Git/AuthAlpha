@@ -18,7 +18,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 __author__ = "Mayank Vats"
 __email__ = "dev-theorist.e5xna@simplelogin.com"
 __Description__ = "AuthAlpha: A package to manage Hashing and OTP generation."
-__version__ = "0.8.1alpha"
+__version__ = "0.8.2alpha"
 
 """
 
@@ -38,7 +38,7 @@ class PassHashing:
             "scrypt"
         ]
 
-    def generate_password_hash(self, password, cost: int = None, prov_salt: bytes = None):
+    def generate_password_hash(self, password: str, cost: int = None, prov_salt: bytes = None):
         """
         :param cost: Specify number of iterations for a certain algorithm,
         default values are chosen sensibly, but you can still change them.
@@ -54,7 +54,7 @@ class PassHashing:
         if self.algorithm == "argon2id":
             from argon2 import PasswordHasher
             crypt_er = PasswordHasher()
-            return crypt_er.hash(str(password))
+            return crypt_er.hash(password)
 
         elif self.algorithm.startswith("pbkdf2:"):
             from secrets import choice
@@ -66,7 +66,7 @@ class PassHashing:
                 # Generating a random salt and encoding it to bytes
                 salt = "".join(choice(SALT_CHARS) for _ in range(16)).encode("utf-8")
                 # Type-casting the inputted password to string and then encoding it to bytes.
-                byte_password = str(password).encode("utf-8")
+                byte_password = password.encode("utf-8")
                 # self.algorithm[7:].split(":") returns a list like this: ['pbkdf2', 'sha256']
                 args = self.algorithm.split(":")[1]
 
@@ -84,7 +84,7 @@ class PassHashing:
 
             else:
                 # In-case the user provides a salt, hashing is done using it. type(salt) is bytes
-                byte_password = str(password).encode("utf-8")
+                byte_password = password.encode("utf-8")
                 args = self.algorithm.split(":")[1]
 
                 if not cost:
@@ -100,9 +100,9 @@ class PassHashing:
             from bcrypt import hashpw, gensalt
             DEFAULT_ITERATIONS = 13  # 2^13
             if not cost:
-                return f"$bcrypt${hashpw(str(password).encode('utf-8'), gensalt(DEFAULT_ITERATIONS))}"
+                return f"$bcrypt{hashpw(password.encode('utf-8'), gensalt(DEFAULT_ITERATIONS)).decode('utf-8')}"
             else:
-                return f"$bcrypt${hashpw(str(password).encode('utf-8'), gensalt(cost))}"
+                return f"$bcrypt{hashpw(password.encode('utf-8'), gensalt(cost)).decode('utf-8')}"
 
         elif self.algorithm == "scrypt":
             from scrypt import hash
@@ -112,29 +112,29 @@ class PassHashing:
             if not prov_salt:
                 # Generating a random salt and encoding it to bytes
                 salt = "".join(choice(SALT_CHARS) for _ in range(16)).encode("utf-8")
-                # Type-casting the inputted password to string and then encoding it to bytes.
-                byte_password = str(password).encode("utf-8")
+                byte_password = password.encode("utf-8")
+
                 if not cost:
                     hashed = hash(byte_password, salt).hex()
-                    return f"$scrypt$N={DEFAULT_ITERATIONS}$r=8$p=1${salt}${hashed}"
+                    return f"$scrypt$N={DEFAULT_ITERATIONS}$r=8$p=1${salt.decode('utf-8')}${hashed}"
                 else:
                     hashed = hash(byte_password, salt, N=1 << cost).hex()
-                    return f"$scrypt$N={cost}$r=8$p=1${salt}${hashed}"
+                    return f"$scrypt$N={cost}$r=8$p=1${salt.decode('utf-8')}${hashed}"
+
             else:
-                salt = prov_salt  # In-case the user provides a salt, hashing is done using it. type(salt) is bytes
-                byte_password = str(password).encode("utf-8")
+                byte_password = password.encode("utf-8")
                 if not cost:
-                    hashed = hash(byte_password, salt).hex()
-                    return f"$scrypt$N={DEFAULT_ITERATIONS}$r=8$p=1${salt}${hashed}"
+                    hashed = hash(byte_password, prov_salt).hex()
+                    return f"$scrypt$N={DEFAULT_ITERATIONS}$r=8$p=1${prov_salt.decode('utf-8')}${hashed}"
                 else:
-                    hashed = hash(byte_password, salt, N=1 << cost).hex()
-                    return f"$scrypt$N={cost}$r=8$p=1${salt}${hashed}"
+                    hashed = hash(byte_password, prov_salt, N=1 << cost).hex()
+                    return f"$scrypt$N={cost}$r=8$p=1${prov_salt.decode('utf-8')}${hashed}"
 
         else:
             return f"We don't support '{self.algorithm}' method yet. \n" \
                    f"Here are the supported methods : {self.supported_hash_methods}"
 
-    def check_password_hash(self, secret, password):
+    def check_password_hash(self, secret: str, password: str):
         """
         Checks a plain text password against a provides hash of a supported algorithm
         see supported_hash_types.
@@ -146,7 +146,7 @@ class PassHashing:
             from argon2 import PasswordHasher, exceptions
             crypt_er = PasswordHasher()
             try:
-                return crypt_er.verify(secret, str(password))
+                return crypt_er.verify(secret, password)
             except exceptions.VerifyMismatchError:
                 return False
 
@@ -162,17 +162,17 @@ class PassHashing:
 
         elif "$bcrypt" in secret:
             from bcrypt import hashpw
-            salt = f"$2b${secret[14:16]}${secret[17:39]}".encode("utf-8")
-            hashed = f'$bcrypt${hashpw(str(password).encode("utf-8"), salt)}'
+            salt = f"$2b${secret[11:13]}${secret[14:]}".encode("utf-8")
+            hashed = f'$bcrypt{hashpw(password.encode("utf-8"), salt).decode("utf-8")}'
             return secret == hashed
 
         elif "$scrypt" in secret:
             from scrypt import hash
-            secret_data = secret[1:].split("$", 5)
-            hashed, prov_salt = secret_data[5], secret_data[4][2:-1]
+            secret_data = secret[1:].split("$")
+            hashed, prov_salt = secret_data[5], secret_data[4].encode('utf-8')
             return hashed == self.generate_password_hash(password,
                                                          cost=int(secret_data[1][2:]),
-                                                         prov_salt=prov_salt)[1:].split("$", 5)[5]
+                                                         prov_salt=prov_salt)[1:].split("$")[5]
 
         else:
             raise TypeError("Unsupported Hash-Type\nTry using the following\n"

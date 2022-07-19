@@ -17,13 +17,6 @@ if __name__ == '__main__':
     print("When pass is correct -> ", bcrypt.check_password_hash(hashed, "SuP#rS€cR€TPass"))  # Will return True
     print("When pass is not correct -> ", bcrypt.check_password_hash(hashed, "NotMyPassword"))  # Will return False
 
-    # If you input a non string to generate_password_hash or check_password_hash,
-    # it will automatically type-cast it to string
-
-    hashed = bcrypt.generate_password_hash(1234567890)
-    print(hashed)
-    print("When pass is correct -> ", bcrypt.check_password_hash(hashed, 1234567890))  # Will return True
-
     # You can also provide you own cost parameter (COST_FACTOR for bcrypt), although the author has chosen
     # parameters sensible in general, everyone has different needs. You need to be careful here,
     # as a high  cost factor will take forever to generate and check hashes. See an example below.
