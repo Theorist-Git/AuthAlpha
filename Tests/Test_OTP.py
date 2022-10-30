@@ -26,7 +26,7 @@ Press 3 to QUIT                     : """))
 
             user_otp = int(input("Enter OTP to check against hash: "))
 
-            if otp_police.check_password_hash(hashed_otp, user_otp):
+            if otp_police.check_password_hash(hashed_otp, str(user_otp)):
                 print("Correct OTP!")
             else:
                 print("Incorrect OTP!")
