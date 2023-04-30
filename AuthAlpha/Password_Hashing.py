@@ -18,7 +18,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 __author__ = "Mayank Vats"
 __email__ = "dev-theorist.e5xna@simplelogin.com"
 __Description__ = "AuthAlpha: A package to manage Hashing and OTP generation."
-__version__ = "0.8.2alpha"
+__version__ = "0.8.3alpha"
 
 """
 
@@ -37,6 +37,12 @@ class PassHashing:
             "bcrypt",
             "scrypt"
         ]
+
+    def __repr__(self):
+        return "PassHashing('{}')".format(self.algorithm)
+
+    def __str__(self):
+        return f"\033[1mPassword Hashing Class [PassHashing]\033[0m. \033[92mAlgorithm:\033[0m \033[1m{self.algorithm}\033[0m "
 
     def generate_password_hash(self, password: str, cost: int = None, prov_salt: bytes = None):
         """
@@ -67,7 +73,6 @@ class PassHashing:
                 salt = "".join(choice(SALT_CHARS) for _ in range(16)).encode("utf-8")
                 # Type-casting the inputted password to string and then encoding it to bytes.
                 byte_password = password.encode("utf-8")
-                # self.algorithm[7:].split(":") returns a list like this: ['pbkdf2', 'sha256']
                 args = self.algorithm.split(":")[1]
 
                 # Default rounds of pbkdf2
@@ -99,10 +104,14 @@ class PassHashing:
         elif self.algorithm == "bcrypt":
             from bcrypt import hashpw, gensalt
             DEFAULT_ITERATIONS = 13  # 2^13
-            if not cost:
-                return f"$bcrypt{hashpw(password.encode('utf-8'), gensalt(DEFAULT_ITERATIONS)).decode('utf-8')}"
-            else:
-                return f"$bcrypt{hashpw(password.encode('utf-8'), gensalt(cost)).decode('utf-8')}"
+
+            if not prov_salt:
+                if not cost:
+                    return f"$bcrypt{hashpw(password.encode('utf-8'), gensalt(DEFAULT_ITERATIONS)).decode('utf-8')}"
+                else:
+                    return f"$bcrypt{hashpw(password.encode('utf-8'), gensalt(cost)).decode('utf-8')}"
+            elif prov_salt:
+                return f"$bcrypt{hashpw(password.encode('utf-8'), prov_salt).decode('utf-8')}"
 
         elif self.algorithm == "scrypt":
             from scrypt import hash
@@ -137,7 +146,7 @@ class PassHashing:
     def check_password_hash(self, secret: str, password: str):
         """
         Checks a plain text password against a provides hash of a supported algorithm
-        see supported_hash_types.
+        see supported_hash_types
         :param secret: hash digest of a certain algorithm
         :param password: Plain-text password
         :return: True or False (password is correct or not)
@@ -162,8 +171,9 @@ class PassHashing:
 
         elif "$bcrypt" in secret:
             from bcrypt import hashpw
-            salt = f"$2b${secret[11:13]}${secret[14:]}".encode("utf-8")
-            hashed = f'$bcrypt{hashpw(password.encode("utf-8"), salt).decode("utf-8")}'
+            hash_data = secret[1:].split("$")
+            salt = f"${hash_data[1]}${hash_data[2]}${hash_data[3][:22]}".encode("utf-8")
+            hashed = self.generate_password_hash(password, prov_salt=salt)
             return secret == hashed
 
         elif "$scrypt" in secret:
@@ -185,6 +195,7 @@ if __name__ == '__main__':
     # This section illustrates common errors and their work-around
     # If you provide a hash digest which is not recognized Type error will be raised
     # check_hash("NOTRECOGNIZED", 1234567890)
+    print(hashes_to_hashes)
 
     """
     Traceback (most recent call last):
@@ -197,7 +208,7 @@ if __name__ == '__main__':
     # You can catch the above exception like so:
 
     try:
-        hashes_to_hashes.check_password_hash("NOTRECOGNIZED", 1234567890)
+        hashes_to_hashes.check_password_hash("NOTRECOGNIZED", str(1234567890))
     except TypeError as e:
         print(e, "\n")
 

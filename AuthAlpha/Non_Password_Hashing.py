@@ -18,7 +18,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 __author__ = "Mayank Vats"
 __email__ = "dev-theorist.e5xna@simplelogin.com"
 __Description__ = "AuthAlpha: A package to manage Hashing and OTP generation."
-__version__ = "0.8.2alpha"
+__version__ = "0.8.3alpha"
 
 """
 
@@ -38,6 +38,12 @@ class NonPassHashing:
             "sha3_384",
             "sha3_512"
         ]
+
+    def __repr__(self):
+        return "NonPassHashing('{}')".format(self.algorithm)
+
+    def __str__(self):
+        return f"\033[1mNon-Password Hashing Class [NonPassHashing]\033[0m. \033[92mAlgorithm:\033[0m \033[1m{self.algorithm}\033[0m"
 
     def generate_file_hash(self, file):
         if self.algorithm in self.supported_hash_methods:

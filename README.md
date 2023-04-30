@@ -46,7 +46,12 @@ Contributor names and contact info
   * Email: dev-theorist.e5xna@simplelogin.com
 
 ## Version History
-See [commit history](https://github.com/Theorist-Git/Cryptography-Methods/commits/master)
+See [commit history](https://github.com/Theorist-Git/AuthAlpha/commits/master)
+* **0.8.3a**
+  * Added support for custom salts to bcrypt.
+  * Added \__repr__ and \__str__ methods to all classes.
+  * Fixed bug in bcrypt hash checks where entire hash+salt was being passed as salt.
+  * Minor code enhancements.
 * **0.8.2a**
   * Introduced stricter type casting to PassHashing class resulting in cleaner code
     and lower chances of runtime errors.

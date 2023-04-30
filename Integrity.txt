@@ -1,11 +1,11 @@
 Hash for Password_Hashing.py:
-sha256 : 776cda9114c37b5e6a1d4c1421e74702404e1dc4d46ae6c47ce74d294aa7f908
+sha256 : 55b410bfddd63e06e7b69f5adbdee54649da2ca1965dd55c1ce19628e1db94e1
 ----------------------------------------------------------------------------
 
 Hash for Non_Password_Hashing.py:
-sha256 : d6efb3ee6ccc41439297d710ca8eea2278023c03d58ff657552c3982569c54f2
+sha256 : 01051f5531dfc5edbde8dcd06620b0a5c20ffa5ed71fbf176ee008cf420d844a
 ----------------------------------------------------------------------------
 
 Hash for OTPMethods.py:
-sha256 : d8079458997ff3c638e3d8e7239573fc5748fd4b647e96040e7f63e6d392be1f
+sha256 : cd62ca22bbd19b01b13534c9e9b9c300056de33789bf2407aba9b230b8d61f7d
 ----------------------------------------------------------------------------

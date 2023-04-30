@@ -1,7 +1,10 @@
 from AuthAlpha import TwoFactorAuth
 from AuthAlpha import PassHashing
 from pyotp import TOTP
-from time import sleep
+"""
+This file shows you how to implement OTP generation and verification 
+using AuthAlpha.
+"""
 
 if __name__ == '__main__':
     crypt = TwoFactorAuth()

@@ -18,12 +18,18 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 __author__ = "Mayank Vats"
 __email__ = "dev-theorist.e5xna@simplelogin.com"
 __Description__ = "AuthAlpha: A package to manage Hashing and OTP generation."
-__version__ = "0.8.2alpha"
+__version__ = "0.8.3alpha"
 
 """
 
 
 class TwoFactorAuth:
+
+    def __repr__(self):
+        return "TwoFactorAuth()"
+
+    def __str__(self):
+        return "\033[1mTwo Factor Authentication Class[TwoFactorAuth]\033[0m."
 
     @staticmethod
     def static_otp(otp_len: int = 6) -> str:
