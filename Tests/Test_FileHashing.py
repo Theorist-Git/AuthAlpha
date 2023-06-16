@@ -3,13 +3,10 @@ from AuthAlpha.Non_Password_Hashing import NonPassHashing
 hash_list = NonPassHashing("algo").supported_hash_methods
 print("List of supported hashes: ", hash_list)
 
-license_path = "C:\\Users\\mayan\\Desktop\\languages\\Python 3.9\\Projects\\Cryptography\\AuthAlpha\\license.txt"
-pass_hashing = "C:\\Users\\mayan\\Desktop\\languages\\Python " \
-               "3.9\\Projects\\Cryptography\\AuthAlpha\\AuthAlpha\\Password_Hashing.py "
-non_pass_hashing = "C:\\Users\\mayan\\Desktop\\languages\\Python " \
-                    "3.9\\Projects\\Cryptography\\AuthAlpha\\AuthAlpha\\Non_Password_Hashing.py "
-otp_methods = "C:\\Users\\mayan\\Desktop\\languages\\Python " \
-              "3.9\\Projects\\Cryptography\\AuthAlpha\\AuthAlpha\\OTPMethods.py "
+license_path = "/home/theorist/Desktop/Programming/python/AuthAlpha/Integrity.txt"
+pass_hashing = "/home/theorist/Desktop/Programming/python/AuthAlpha/AuthAlpha/Password_Hashing.py"
+non_pass_hashing = "/home/theorist/Desktop/Programming/python/AuthAlpha/AuthAlpha/Non_Password_Hashing.py"
+otp_methods = "/home/theorist/Desktop/Programming/python/AuthAlpha/AuthAlpha/OTPMethods.py"
 
 hashed = NonPassHashing('sha256')
 print("License.txt SHA256 hash", hashed.generate_file_hash(license_path))
@@ -26,9 +23,7 @@ print(hashed.check_file_hash(license_path, "2c7498404231e3f980b42756c06de5f58cfd
 # to ensure that the file hasn't been tampered with. I will also now be providing SHA256 hashes of relavent
 # files in Integrity.txt file.
 
-print("Hashes of pass_hashing,2,3: ")
-
-f = open(r"C:\Users\mayan\Desktop\languages\Python 3.9\Projects\Cryptography\AuthAlpha\Integrity.txt", "w")
+f = open(r"/home/theorist/Desktop/Programming/python/AuthAlpha/Integrity.txt", "w")
 updated_hash = (
     "Hash for Password_Hashing.py:\n"
     f"sha256 : {NonPassHashing('sha256').generate_file_hash(pass_hashing)}"

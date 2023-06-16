@@ -111,7 +111,11 @@ class PassHashing:
                 else:
                     return f"$bcrypt{hashpw(password.encode('utf-8'), gensalt(cost)).decode('utf-8')}"
             elif prov_salt:
-                return f"$bcrypt{hashpw(password.encode('utf-8'), prov_salt).decode('utf-8')}"
+                if prov_salt.endswith(b".") or prov_salt.endswith(b"O") or prov_salt.endswith(b"e") or prov_salt.endswith(b"u"):
+                    return f"$bcrypt{hashpw(password.encode('utf-8'), prov_salt).decode('utf-8')}"
+                else:
+                    raise(TypeError("Invalid Salt\n(AuthAlpha): The salt must end with '.', 'O', "
+                                    "'e' or 'u' in bcrypt. See .."))
 
         elif self.algorithm == "scrypt":
             from scrypt import hash
