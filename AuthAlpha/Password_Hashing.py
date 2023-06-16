@@ -1,5 +1,5 @@
 """
-Copyright (C) 2021-2022 Mayank Vats
+Copyright (C) 2021-2023 Mayank Vats
 See license.txt
 
 This program is free software: you can redistribute it and/or modify
@@ -18,7 +18,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 __author__ = "Mayank Vats"
 __email__ = "dev-theorist.e5xna@simplelogin.com"
 __Description__ = "AuthAlpha: A package to manage Hashing and OTP generation."
-__version__ = "0.8.3alpha"
+__version__ = "0.8.4alpha"
 
 """
 
