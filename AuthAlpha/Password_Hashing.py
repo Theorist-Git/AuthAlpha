@@ -115,7 +115,7 @@ class PassHashing:
                     return f"$bcrypt{hashpw(password.encode('utf-8'), prov_salt).decode('utf-8')}"
                 else:
                     raise(TypeError("Invalid Salt\n(AuthAlpha): The salt must end with '.', 'O', "
-                                    "'e' or 'u' in bcrypt. See .."))
+                                    "'e' or 'u' in bcrypt. See https://github.com/Theorist-Git/AuthAlpha/commit/b00b7ce1b33c64d61da85ea2b657617008f16abe"))
 
         elif self.algorithm == "scrypt":
             from scrypt import hash
