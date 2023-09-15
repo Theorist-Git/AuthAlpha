@@ -18,7 +18,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 __author__ = "Mayank Vats"
 __email__ = "dev-theorist.e5xna@simplelogin.com"
 __Description__ = "AuthAlpha: A package to manage Hashing and OTP generation."
-__version__ = "0.8.4alpha"
+__version__ = "0.8.5alpha"
 
 """
 
@@ -36,14 +36,15 @@ class NonPassHashing:
             "sha3_224",
             "sha3_256",
             "sha3_384",
-            "sha3_512"
+            "sha3_512",
         ]
 
     def __repr__(self):
         return "NonPassHashing('{}')".format(self.algorithm)
 
     def __str__(self):
-        return f"\033[1mNon-Password Hashing Class [NonPassHashing]\033[0m. \033[92mAlgorithm:\033[0m \033[1m{self.algorithm}\033[0m"
+        return f"\033[1mNon-Password Hashing Class [NonPassHashing]\033[0m. \033[92mAlgorithm:\033[0m \033" \
+               f"[1m{self.algorithm}\033[0m"
 
     def generate_file_hash(self, file):
         if self.algorithm in self.supported_hash_methods:
@@ -68,3 +69,20 @@ class NonPassHashing:
     def check_file_hash(self, file, digest):
         if self.algorithm in self.supported_hash_methods:
             return self.generate_file_hash(file) == digest
+
+    def generate_hash(self, text: str):
+        if self.algorithm in self.supported_hash_methods:
+            import importlib
+            package = importlib.__import__("hashlib", fromlist=self.supported_hash_methods)
+            h = getattr(package, self.algorithm)()
+            h.update(text.encode("utf-8"))
+
+            return h.hexdigest()
+
+        else:
+            return f"We don't support '{self.algorithm}' method yet. \n" \
+                   f"Here are the supported methods : {self.supported_hash_methods}"
+
+    def check_hash(self, text: str, non_pass_hash: str):
+        if self.algorithm in self.supported_hash_methods:
+            return self.generate_hash(text) == non_pass_hash

@@ -4,3 +4,5 @@ dist
 MANIFEST
 setup.cfg
 setup.py
+pypi_upload.sh
+update.sh

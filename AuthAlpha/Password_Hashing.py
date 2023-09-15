@@ -18,7 +18,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 __author__ = "Mayank Vats"
 __email__ = "dev-theorist.e5xna@simplelogin.com"
 __Description__ = "AuthAlpha: A package to manage Hashing and OTP generation."
-__version__ = "0.8.4alpha"
+__version__ = "0.8.5alpha"
 
 """
 
@@ -42,7 +42,8 @@ class PassHashing:
         return "PassHashing('{}')".format(self.algorithm)
 
     def __str__(self):
-        return f"\033[1mPassword Hashing Class [PassHashing]\033[0m. \033[92mAlgorithm:\033[0m \033[1m{self.algorithm}\033[0m "
+        return f"\033[1mPassword Hashing Class [PassHashing]\033[0m. \033[92mAlgorithm:\033[0m \033" \
+               f"[1m{self.algorithm}\033[0m "
 
     def generate_password_hash(self, password: str, cost: int = None, prov_salt: bytes = None):
         """
@@ -111,11 +112,13 @@ class PassHashing:
                 else:
                     return f"$bcrypt{hashpw(password.encode('utf-8'), gensalt(cost)).decode('utf-8')}"
             elif prov_salt:
-                if prov_salt.endswith(b".") or prov_salt.endswith(b"O") or prov_salt.endswith(b"e") or prov_salt.endswith(b"u"):
+                if prov_salt.endswith(b".") or prov_salt.endswith(b"O") or prov_salt.endswith(b"e") or \
+                        prov_salt.endswith(b"u"):
                     return f"$bcrypt{hashpw(password.encode('utf-8'), prov_salt).decode('utf-8')}"
                 else:
                     raise(TypeError("Invalid Salt\n(AuthAlpha): The salt must end with '.', 'O', "
-                                    "'e' or 'u' in bcrypt. See https://github.com/Theorist-Git/AuthAlpha/commit/b00b7ce1b33c64d61da85ea2b657617008f16abe"))
+                                    "'e' or 'u' in bcrypt. See https://github.com/Theorist-Git/AuthAlpha/commit"
+                                    "/b00b7ce1b33c64d61da85ea2b657617008f16abe"))
 
         elif self.algorithm == "scrypt":
             from scrypt import hash

@@ -47,6 +47,10 @@ Contributor names and contact info
 
 ## Version History
 See [commit history](https://github.com/Theorist-Git/AuthAlpha/commits/master)
+* **0.8.5a**
+  * Non_Password_Hashing class can now generate hashes for strings as well.
+  * Added new test for Non_Password_Hashing.
+  * Minor enhancements to Test_FileHashing.py. Fixed PEP Warnings in Password_hashing.py
 * **0.8.4a**
   * Added check for correct salt in custom salt.(For some reason the salt must end with '.', 'O', 'e' or 'u' in bcrypt)
     * With a 16 bytes salt, 2 padding bytes are appended. Of the 128 bits of the salt, 126 bits can be grouped into 21 blocks of 6 bits each. The last two bits can only form the blocks 000000, 010000, 100000 and 110000, which are mapped to the chars ., O, e and u in the bcrypt Base64 variant. All following blocks consist of zero bits due to padding and are ignored by the bcrypt Base64 variant. This is the reason why all salts generated with gensalt() contain one of these 4 chars at the end. The salt with the ending sequence uv is not a regular bcrypt Base64 encoding and thus not valid.
@@ -95,7 +99,7 @@ See [commit history](https://github.com/Theorist-Git/AuthAlpha/commits/master)
 **TBD**
 In the meanwhile you can review the code, it is fully commented.
 
-## PostScriptrum
+## PS
 
 * After downloading, make sure you have the un-tampered files with you, check Integrity.txt to check the hashes of the
 AuthAlpha file match with the ones you have. If they do not match, contact the author(s) immediately at
