@@ -21,7 +21,7 @@ if __name__ == '__main__':
 
     # When you provide your own salt:
 
-    hashed = pbkdf2.generate_password_hash("Secret", prov_salt="mayankvats".encode("utf-8"))
+    hashed = pbkdf2.generate_password_hash("Secret", salt="123".encode("utf-8"))
     print(hashed)
     print("When pass is correct -> ", pbkdf2.check_password_hash(hashed, "Secret"))
 

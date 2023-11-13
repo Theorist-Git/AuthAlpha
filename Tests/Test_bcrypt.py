@@ -32,9 +32,9 @@ if __name__ == '__main__':
     print("When pass is correct -> ", bcrypt.check_password_hash(custom_hashed, "SuP#rS€cR€TPass"))  # Will return True
     print("When pass is not correct -> ", bcrypt.check_password_hash(custom_hashed, "NotMyPassword"))
     # Will return False
-    salt = b"$2b$13$MayankVatsUCMMfestXX.)"
+    salt = b"MayankVatsUCMMfestXXX."
 
-    custom_salt = bcrypt.generate_password_hash("SuP#rS€cR€TPass", prov_salt=salt)
+    custom_salt = bcrypt.generate_password_hash("SuP#rS€cR€TPass", salt=salt)
 
     print("Hash with custom salt: ", custom_salt)
 

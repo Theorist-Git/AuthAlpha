@@ -21,13 +21,14 @@ __Description__ = "AuthAlpha: A package to manage Hashing and OTP generation."
 __version__ = "0.8.5alpha"
 
 """
+import os
 
 
 class PassHashing:
 
     def __init__(self, algorithm):
         self.algorithm = algorithm
-        self.supported_hash_methods = [
+        self.supported_hash_methods = (
             "argon2id",
             "pbkdf2:sha1",
             "pbkdf2:sha224",
@@ -36,7 +37,7 @@ class PassHashing:
             "pbkdf2:sha512",
             "bcrypt",
             "scrypt"
-        ]
+        )
 
     def __repr__(self):
         return "PassHashing('{}')".format(self.algorithm)
@@ -45,13 +46,13 @@ class PassHashing:
         return f"\033[1mPassword Hashing Class [PassHashing]\033[0m. \033[92mAlgorithm:\033[0m \033" \
                f"[1m{self.algorithm}\033[0m "
 
-    def generate_password_hash(self, password: str, cost: int = None, prov_salt: bytes = None):
+    def generate_password_hash(self, password: str, cost: int = None, salt: bytes = None):
         """
         :param cost: Specify number of iterations for a certain algorithm,
         default values are chosen sensibly, but you can still change them.
         (NOT APPLICABLE FOR ARGON2ID(TBD))
         :param password: type(password) is str
-        :param prov_salt: (optional) provide a bytes-like salt for hashing
+        :param salt: (optional) provide a bytes-like salt for hashing
         only applicable for pbkdf2 hashes.
         :return: str(hash)
         This method generates a hash pertaining to a specified algorithm,
@@ -60,91 +61,81 @@ class PassHashing:
 
         if self.algorithm == "argon2id":
             from argon2 import PasswordHasher
-            crypt_er = PasswordHasher()
-            return crypt_er.hash(password)
+            ph = PasswordHasher()
+            return ph.hash(password)
 
         elif self.algorithm.startswith("pbkdf2:"):
             from secrets import choice
             from hashlib import pbkdf2_hmac
             SALT_CHARS = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
-            DEFAULT_ITERATIONS = 300000
 
-            if not prov_salt:
+            if not cost:
+                ITERATIONS = 300000  # Default Iterations
+            else:
+                ITERATIONS = cost
+
+            # Encoding password string to bytes
+            byte_password = password.encode("utf-8")
+
+            # self.algorithm = pbkdf2:sha---
+            # self.algorithm.split(":")[1] = `sha---`
+            sha_variant = self.algorithm.split(":")[1]
+
+            if not salt:
                 # Generating a random salt and encoding it to bytes
                 salt = "".join(choice(SALT_CHARS) for _ in range(16)).encode("utf-8")
-                # Type-casting the inputted password to string and then encoding it to bytes.
-                byte_password = password.encode("utf-8")
-                args = self.algorithm.split(":")[1]
 
-                # Default rounds of pbkdf2
-                if not cost:
-                    h = pbkdf2_hmac(args, byte_password, salt, DEFAULT_ITERATIONS).hex()
-                    actual_method = f"$pbkdf2:{args}:{DEFAULT_ITERATIONS}"
-                    return f"{actual_method}${salt.decode('utf-8')}${h}"
+            h = pbkdf2_hmac(sha_variant, byte_password, salt, ITERATIONS).hex()
+            hash_prefix = f"$pbkdf2:{sha_variant}:{ITERATIONS}"
 
-                # Custom rounds of pbkdf2
-                else:
-                    h = pbkdf2_hmac(args, byte_password, salt, cost).hex()  # specified number of rounds
-                    actual_method = f"$pbkdf2:{args}:{cost}"
-                    return f"{actual_method}${salt.decode('utf-8')}${h}"
-
-            else:
-                # In-case the user provides a salt, hashing is done using it. type(salt) is bytes
-                byte_password = password.encode("utf-8")
-                args = self.algorithm.split(":")[1]
-
-                if not cost:
-                    h = pbkdf2_hmac(args, byte_password, prov_salt, DEFAULT_ITERATIONS).hex()
-                    actual_method = f"$pbkdf2:{args}:{DEFAULT_ITERATIONS}"
-                    return f"{actual_method}${prov_salt.decode('utf-8')}${h}"
-                else:
-                    h = pbkdf2_hmac(args, byte_password, prov_salt, cost).hex()  # specified number of rounds
-                    actual_method = f"$pbkdf2:{args}:{cost}"
-                    return f"{actual_method}${prov_salt.decode('utf-8')}${h}"
+            return f"{hash_prefix}${salt.decode('utf-8')}${h}"
 
         elif self.algorithm == "bcrypt":
             from bcrypt import hashpw, gensalt
-            DEFAULT_ITERATIONS = 13  # 2^13
 
-            if not prov_salt:
-                if not cost:
-                    return f"$bcrypt{hashpw(password.encode('utf-8'), gensalt(DEFAULT_ITERATIONS)).decode('utf-8')}"
-                else:
-                    return f"$bcrypt{hashpw(password.encode('utf-8'), gensalt(cost)).decode('utf-8')}"
-            elif prov_salt:
-                if prov_salt.endswith(b".") or prov_salt.endswith(b"O") or prov_salt.endswith(b"e") or \
-                        prov_salt.endswith(b"u"):
-                    return f"$bcrypt{hashpw(password.encode('utf-8'), prov_salt).decode('utf-8')}"
-                else:
-                    raise(TypeError("Invalid Salt\n(AuthAlpha): The salt must end with '.', 'O', "
-                                    "'e' or 'u' in bcrypt. See https://github.com/Theorist-Git/AuthAlpha/commit"
-                                    "/b00b7ce1b33c64d61da85ea2b657617008f16abe"))
+            B64_SALT_LEN = 22
+
+            if not cost:
+                ITERATIONS = 13  # Default Iterations = 2^13
+            else:
+                ITERATIONS = cost
+
+            if not salt:
+                # Salt generated by bcrypt
+                salt = gensalt(ITERATIONS)
+
+            else:
+                salt_check = salt.endswith(b".") or salt.endswith(b"O") or salt.endswith(b"e") or salt.endswith(b"u")
+                if not salt_check:
+                    raise (TypeError("Invalid Salt\n(AuthAlpha): The salt must end with '.', 'O', "
+                                     "'e' or 'u' in bcrypt. See https://github.com/Theorist-Git/AuthAlpha/commit"
+                                     "/b00b7ce1b33c64d61da85ea2b657617008f16abe"))
+                if len(salt) != B64_SALT_LEN:
+                    raise TypeError("salt must be 22 base 64 encoded character or 16 bytes long. Eg: \n "
+                                    "'XeFRr+UT49ZF0DKDyIPMh.'")
+                salt = b"$" + b"2b" + b"$" + ("%2.2u" % ITERATIONS).encode("ascii") + b"$" + salt
+
+            return f"$bcrypt{hashpw(password.encode('utf-8'), salt).decode('utf-8')}"
 
         elif self.algorithm == "scrypt":
             from scrypt import hash
             from secrets import choice
             SALT_CHARS = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
-            DEFAULT_ITERATIONS = 14  # 2^14
-            if not prov_salt:
+
+            if not cost:
+                ITERATIONS = 14  # Default Iterations = 2^14
+            else:
+                ITERATIONS = cost
+
+            byte_password = password.encode("utf-8")
+
+            if not salt:
                 # Generating a random salt and encoding it to bytes
                 salt = "".join(choice(SALT_CHARS) for _ in range(16)).encode("utf-8")
-                byte_password = password.encode("utf-8")
 
-                if not cost:
-                    hashed = hash(byte_password, salt).hex()
-                    return f"$scrypt$N={DEFAULT_ITERATIONS}$r=8$p=1${salt.decode('utf-8')}${hashed}"
-                else:
-                    hashed = hash(byte_password, salt, N=1 << cost).hex()
-                    return f"$scrypt$N={cost}$r=8$p=1${salt.decode('utf-8')}${hashed}"
+            hashed = hash(byte_password, salt, N=1 << ITERATIONS).hex()
 
-            else:
-                byte_password = password.encode("utf-8")
-                if not cost:
-                    hashed = hash(byte_password, prov_salt).hex()
-                    return f"$scrypt$N={DEFAULT_ITERATIONS}$r=8$p=1${prov_salt.decode('utf-8')}${hashed}"
-                else:
-                    hashed = hash(byte_password, prov_salt, N=1 << cost).hex()
-                    return f"$scrypt$N={cost}$r=8$p=1${prov_salt.decode('utf-8')}${hashed}"
+            return f"$scrypt$N={ITERATIONS}$r=8$p=1${salt.decode('utf-8')}${hashed}"
 
         else:
             return f"We don't support '{self.algorithm}' method yet. \n" \
@@ -170,29 +161,32 @@ class PassHashing:
             method, prov_salt, hashval = secret[1:].split("$", 2)
             import hmac
             return hmac.compare_digest(
-                self.generate_password_hash(password,
-                                            cost=int(method.split(":")[2]),
-                                            prov_salt=prov_salt.encode("utf-8"))[1:].split("$", 2)[2],
+                self.generate_password_hash(password, cost=int(method.split(":")[2]), salt=prov_salt.encode("utf-8"))[
+                1:].split("$", 2)[2],
                 hashval
             )
 
         elif "$bcrypt" in secret:
             from bcrypt import hashpw
+
+            B64_SALT_LEN = 22
+
             hash_data = secret[1:].split("$")
-            salt = f"${hash_data[1]}${hash_data[2]}${hash_data[3][:22]}".encode("utf-8")
-            hashed = self.generate_password_hash(password, prov_salt=salt)
-            return secret == hashed
+            cost = int(hash_data[2])
+            salt = hash_data[3][:B64_SALT_LEN].encode("utf-8")
+
+            return secret == self.generate_password_hash(password, cost=cost, salt=salt)
 
         elif "$scrypt" in secret:
             from scrypt import hash
             secret_data = secret[1:].split("$")
             hashed, prov_salt = secret_data[5], secret_data[4].encode('utf-8')
-            return hashed == self.generate_password_hash(password,
-                                                         cost=int(secret_data[1][2:]),
-                                                         prov_salt=prov_salt)[1:].split("$")[5]
+            return hashed == \
+                self.generate_password_hash(password, cost=int(secret_data[1][2:]), salt=prov_salt)[1:].split("$")[5]
 
         else:
-            raise TypeError("Unsupported Hash-Type\nTry using the following\n"
+            raise TypeError(f"Unsupported Hash-Type: `{secret}` for algorithm `{self.algorithm}`\nTry using the "
+                            f"following\n"
                             f"{self.supported_hash_methods}")
 
 
@@ -204,14 +198,6 @@ if __name__ == '__main__':
     # check_hash("NOTRECOGNIZED", 1234567890)
     print(hashes_to_hashes)
 
-    """
-    Traceback (most recent call last):
-        raise TypeError("Unsupported Hash-Type\nTry using the following\n"
-    TypeError: Unsupported Hash-Type
-    Try using the following
-    ['argon2id', 'pbkdf2:sha1', 'pbkdf2:sha224', 'pbkdf2:sha256', 'pbkdf2:sha384', 'pbkdf2:sha512', 'bcrypt', 'scrypt']
-    """
-
     # You can catch the above exception like so:
 
     try:
@@ -219,7 +205,7 @@ if __name__ == '__main__':
     except TypeError as e:
         print(e, "\n")
 
-    # You can print Supported list on demand like so:
+    # You can print Supported list on demand like this:
 
     print("Supported Hash Methods: \n", hashes_to_hashes.supported_hash_methods)
 
