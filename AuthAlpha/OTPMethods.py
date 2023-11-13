@@ -18,7 +18,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 __author__ = "Mayank Vats"
 __email__ = "dev-theorist.e5xna@simplelogin.com"
 __Description__ = "AuthAlpha: A package to manage Hashing and OTP generation."
-__version__ = "0.8.5alpha"
+__version__ = "0.8.6alpha"
 
 """
 
@@ -51,10 +51,10 @@ class TwoFactorAuth:
         return str(otp)
 
     @staticmethod
-    def totp(name, issuer_name: str, secret_len: int = 64) -> tuple:
+    def totp(user_name, issuer_name: str, secret_len: int = 64) -> tuple:
         from pyotp import random_base32, TOTP
         token = random_base32(secret_len)
-        URL = TOTP(token).provisioning_uri(name=name, issuer_name=issuer_name)
+        URL = TOTP(token).provisioning_uri(name=user_name, issuer_name=issuer_name)
 
         return token, URL
 

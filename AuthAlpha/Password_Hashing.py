@@ -18,10 +18,9 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 __author__ = "Mayank Vats"
 __email__ = "dev-theorist.e5xna@simplelogin.com"
 __Description__ = "AuthAlpha: A package to manage Hashing and OTP generation."
-__version__ = "0.8.5alpha"
+__version__ = "0.8.6alpha"
 
 """
-import os
 
 
 class PassHashing:
