@@ -161,7 +161,7 @@ class PassHashing:
             import hmac
             return hmac.compare_digest(
                 self.generate_password_hash(password, cost=int(method.split(":")[2]), salt=prov_salt.encode("utf-8"))[
-                1:].split("$", 2)[2],
+                    1:].split("$", 2)[2],
                 hashval
             )
 

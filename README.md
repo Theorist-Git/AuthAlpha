@@ -5,7 +5,6 @@
 A python abstraction to generate and authenticate hashes of passwords and files of any type.
 The package can also be used to implement classic and Time Based OTPs.
 
-
 ## Getting Started
 
 ### Installation:

@@ -46,11 +46,15 @@ class NonPassHashing:
         return f"\033[1mNon-Password Hashing Class [NonPassHashing]\033[0m. \033[92mAlgorithm:\033[0m \033" \
                f"[1m{self.algorithm}\033[0m"
 
-    def generate_file_hash(self, file):
+    def generate_file_hash(self, file: str) -> str:
         if self.algorithm in self.supported_hash_methods:
             import importlib
+            from pathlib import Path
+
             package = importlib.__import__("hashlib", fromlist=self.supported_hash_methods)
             h = getattr(package, self.algorithm)()
+
+            file = Path(file)
             f = open(file, "rb")
 
             # loop till the end of the file
@@ -60,17 +64,21 @@ class NonPassHashing:
                 chunk = f.read(1024)
                 h.update(chunk)
 
+            f.close()
+            test = h.hexdigest()
+            print(f"file_tpye: {type(test)}")
+
             return h.hexdigest()
 
         else:
             return f"We don't support '{self.algorithm}' method yet. \n" \
                    f"Here are the supported methods : {self.supported_hash_methods}"
 
-    def check_file_hash(self, file, digest):
+    def check_file_hash(self, file: str, digest: str) -> bool:
         if self.algorithm in self.supported_hash_methods:
             return self.generate_file_hash(file) == digest
 
-    def generate_hash(self, text: str):
+    def generate_hash(self, text: str) -> str:
         if self.algorithm in self.supported_hash_methods:
             import importlib
             package = importlib.__import__("hashlib", fromlist=self.supported_hash_methods)
@@ -83,6 +91,6 @@ class NonPassHashing:
             return f"We don't support '{self.algorithm}' method yet. \n" \
                    f"Here are the supported methods : {self.supported_hash_methods}"
 
-    def check_hash(self, text: str, non_pass_hash: str):
+    def check_hash(self, text: str, non_pass_hash: str) -> bool:
         if self.algorithm in self.supported_hash_methods:
             return self.generate_hash(text) == non_pass_hash
