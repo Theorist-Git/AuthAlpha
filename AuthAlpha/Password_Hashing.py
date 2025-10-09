@@ -188,7 +188,9 @@ class PassHashing:
             return f"$scrypt$N={log2n}$r={r}$p={p}${salt.hex()}${hashed}"
 
         else:
-            raise NotImplementedError("How'd we even get here?")
+            raise TypeError(f"Unsupported algorithm `{self.algorithm}`\nTry using the "
+                            f"following\n"
+                            f"{self.supported_hash_methods}")
 
     def check_password_hash(self, secret: str, password: str):
         """
@@ -216,7 +218,7 @@ class PassHashing:
 
                 salt_bytes = bytes.fromhex(salt_hex)
 
-            except (ValueError, IndexError):
+            except (ValueError, IndexError, TypeError):
                 return False
 
             from hmac import compare_digest
@@ -252,7 +254,7 @@ class PassHashing:
                 salt_bytes = bytes.fromhex(salt_hex)
                 maxmem = 128 * (1 << log2n) * r + SCRYPT_MEM_BUFFER
 
-            except (ValueError, IndexError):
+            except (ValueError, IndexError, TypeError):
                 return False
 
             # password = byte_password, salt = salt, n = 1 << ITERATIONS, r = 8, p = 1
