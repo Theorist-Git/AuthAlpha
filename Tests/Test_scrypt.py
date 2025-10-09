@@ -31,7 +31,12 @@ if __name__ == '__main__':
     # here, as a high  cost factor will take forever to generate and check hashes. See an example below.
 
     start = time.time()
-    custom_hashed = scrypt.generate_password_hash("SuP#rS€cR€TPass", cost=20)  # iterations = 2^20 === 1048576
+    custom_hashed = scrypt.generate_password_hash(
+        "SuP#rS€cR€TPass",
+        log2n=20,
+        r=8, p=1,
+        maxmem=(1024 * 1024) + 128 * (1 << 20) * 8
+    )  # iterations = 2^20 === 1048576
     end = time.time()
     print("Custom Hash -> ", custom_hashed)
     print("TIme for 2^20 iterations: ", end - start)

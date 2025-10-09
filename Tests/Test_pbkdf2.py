@@ -30,7 +30,7 @@ if __name__ == '__main__':
     # as a high  cost factor will take forever to generate and check hashes. See an example below.
 
     start = time.time()
-    custom_hashed = pbkdf2.generate_password_hash("SuP#rS€cR€TPass", cost=20000000)
+    custom_hashed = pbkdf2.generate_password_hash("SuP#rS€cR€TPass", iterations=20000000)
     end = time.time()
     print("Custom Hash", custom_hashed)
 

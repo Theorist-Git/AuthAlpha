@@ -23,7 +23,7 @@ if __name__ == '__main__':
 
     # For cost factor 16 in bcrypt:
     start = time.time()
-    custom_hashed = bcrypt.generate_password_hash("SuP#rS€cR€TPass", cost=16)
+    custom_hashed = bcrypt.generate_password_hash("SuP#rS€cR€TPass", iterations=16)
     end = time.time()
     print("Custom Hash", custom_hashed)
     print("Time taken for 2^16 rounds = ", end - start)
