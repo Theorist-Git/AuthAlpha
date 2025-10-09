@@ -70,7 +70,6 @@ class NonPassHashing:
 
         return h.hexdigest()
 
-
     def check_file_hash(self, file: str, digest: str) -> bool:
         from hmac import compare_digest
         return compare_digest(self.generate_file_hash(file), digest)
@@ -82,7 +81,6 @@ class NonPassHashing:
         h.update(text.encode("utf-8"))
 
         return h.hexdigest()
-
 
     def check_hash(self, text: str, non_pass_hash: str) -> bool:
         from hmac import compare_digest

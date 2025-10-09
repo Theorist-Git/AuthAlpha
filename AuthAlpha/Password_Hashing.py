@@ -192,7 +192,7 @@ class PassHashing:
                             f"following\n"
                             f"{self.supported_hash_methods}")
 
-    def check_password_hash(self, secret: str, password: str):
+    def check_password_hash(self, secret: str, password: str) -> bool:
         """
         Checks a plain text password against a provides hash of a supported algorithm
         see supported_hash_types
@@ -205,7 +205,7 @@ class PassHashing:
             crypt_er = PasswordHasher()
             try:
                 return crypt_er.verify(secret, password)
-            except exceptions.VerifyMismatchError:
+            except (exceptions.VerifyMismatchError, exceptions.InvalidHash, exceptions.VerificationError):
                 return False
 
         elif secret.startswith("$pbkdf2"):
@@ -240,7 +240,10 @@ class PassHashing:
             from bcrypt import checkpw
             hashed_password = secret.split("$bcrypt")[-1]
 
-            return checkpw(password.encode("utf-8"), hashed_password.encode('utf-8'))
+            try:
+                return checkpw(password.encode("utf-8"), hashed_password.encode('utf-8'))
+            except (ValueError, TypeError):
+                return False
 
         elif secret.startswith("$scrypt"):
             from hmac import compare_digest
@@ -257,15 +260,17 @@ class PassHashing:
             except (ValueError, IndexError, TypeError):
                 return False
 
-            # password = byte_password, salt = salt, n = 1 << ITERATIONS, r = 8, p = 1
-            hash_to_check = scrypt(
-                password=password.encode("utf-8"),
-                salt=salt_bytes,
-                n=1 << log2n,
-                r=r,
-                p=p,
-                maxmem=maxmem
-            ).hex()
+            try:
+                hash_to_check = scrypt(
+                    password=password.encode("utf-8"),
+                    salt=salt_bytes,
+                    n=1 << log2n,
+                    r=r,
+                    p=p,
+                    maxmem=maxmem
+                ).hex()
+            except (ValueError, TypeError):
+                return False
 
             return compare_digest(hash_to_check, hash_hex)
 
