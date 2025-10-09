@@ -27,7 +27,7 @@ class NonPassHashing:
 
     def __init__(self, algorithm):
         self.algorithm = algorithm
-        self.supported_hash_methods = [
+        self.supported_hash_methods = (
             "sha1",
             "sha224",
             "sha256",
@@ -37,7 +37,11 @@ class NonPassHashing:
             "sha3_256",
             "sha3_384",
             "sha3_512",
-        ]
+        )
+
+        if self.algorithm not in self.supported_hash_methods:
+            raise TypeError(f"We don't support '{self.algorithm}' method yet. \n"
+                   f"Here are the supported methods : {self.supported_hash_methods}")
 
     def __repr__(self):
         return "NonPassHashing('{}')".format(self.algorithm)
@@ -47,50 +51,39 @@ class NonPassHashing:
                f"[1m{self.algorithm}\033[0m"
 
     def generate_file_hash(self, file: str) -> str:
-        if self.algorithm in self.supported_hash_methods:
-            import importlib
-            from pathlib import Path
+        import importlib
+        from pathlib import Path
 
-            package = importlib.__import__("hashlib", fromlist=self.supported_hash_methods)
-            h = getattr(package, self.algorithm)()
+        package = importlib.__import__("hashlib", fromlist=self.supported_hash_methods)
+        h = getattr(package, self.algorithm)()
 
-            file = Path(file)
-            f = open(file, "rb")
+        try:
+            with open(Path(file), "rb") as f:
+                # loop till the end of the file
+                chunk = 0
+                while chunk != b'':
+                    # read only 1024 bytes at a time
+                    chunk = f.read(1024)
+                    h.update(chunk)
+        except FileNotFoundError:
+            raise FileNotFoundError(f"File '{file}' not found.")
 
-            # loop till the end of the file
-            chunk = 0
-            while chunk != b'':
-                # read only 1024 bytes at a time
-                chunk = f.read(1024)
-                h.update(chunk)
+        return h.hexdigest()
 
-            f.close()
-            test = h.hexdigest()
-            print(f"file_tpye: {type(test)}")
-
-            return h.hexdigest()
-
-        else:
-            return f"We don't support '{self.algorithm}' method yet. \n" \
-                   f"Here are the supported methods : {self.supported_hash_methods}"
 
     def check_file_hash(self, file: str, digest: str) -> bool:
-        if self.algorithm in self.supported_hash_methods:
-            return self.generate_file_hash(file) == digest
+        from hmac import compare_digest
+        return compare_digest(self.generate_file_hash(file), digest)
 
     def generate_hash(self, text: str) -> str:
-        if self.algorithm in self.supported_hash_methods:
-            import importlib
-            package = importlib.__import__("hashlib", fromlist=self.supported_hash_methods)
-            h = getattr(package, self.algorithm)()
-            h.update(text.encode("utf-8"))
+        import importlib
+        package = importlib.__import__("hashlib", fromlist=self.supported_hash_methods)
+        h = getattr(package, self.algorithm)()
+        h.update(text.encode("utf-8"))
 
-            return h.hexdigest()
+        return h.hexdigest()
 
-        else:
-            return f"We don't support '{self.algorithm}' method yet. \n" \
-                   f"Here are the supported methods : {self.supported_hash_methods}"
 
     def check_hash(self, text: str, non_pass_hash: str) -> bool:
-        if self.algorithm in self.supported_hash_methods:
-            return self.generate_hash(text) == non_pass_hash
+        from hmac import compare_digest
+        return compare_digest(self.generate_hash(text), non_pass_hash)

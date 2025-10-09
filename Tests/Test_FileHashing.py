@@ -1,6 +1,6 @@
 from AuthAlpha.Non_Password_Hashing import NonPassHashing
 
-hash_list = NonPassHashing("algo").supported_hash_methods
+hash_list = NonPassHashing("sha512").supported_hash_methods
 print("List of supported hashes: ", hash_list)
 
 integrity_path = "/home/theorist/Desktop/Programming/python/AuthAlpha/Integrity.txt"
