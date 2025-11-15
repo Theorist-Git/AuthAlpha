@@ -47,15 +47,14 @@ class NonPassHashing:
         return "NonPassHashing('{}')".format(self.algorithm)
 
     def __str__(self):
-        return f"\033[1mNon-Password Hashing Class [NonPassHashing]\033[0m. \033[92mAlgorithm:\033[0m \033" \
-               f"[1m{self.algorithm}\033[0m"
+        return f"Non-Password Hashing Class [NonPassHashing] Algorithm:" \
+               f"{self.algorithm}"
 
     def generate_file_hash(self, file: str) -> str:
-        import importlib
+        import hashlib
         from pathlib import Path
 
-        package = importlib.__import__("hashlib", fromlist=self.supported_hash_methods)
-        h = getattr(package, self.algorithm)()
+        h = hashlib.new(self.algorithm)
 
         try:
             with open(Path(file), "rb") as f:
@@ -75,9 +74,9 @@ class NonPassHashing:
         return compare_digest(self.generate_file_hash(file), digest)
 
     def generate_hash(self, text: str) -> str:
-        import importlib
-        package = importlib.__import__("hashlib", fromlist=self.supported_hash_methods)
-        h = getattr(package, self.algorithm)()
+        import hashlib
+
+        h = hashlib.new(self.algorithm)
         h.update(text.encode("utf-8"))
 
         return h.hexdigest()
