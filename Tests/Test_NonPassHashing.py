@@ -1,8 +1,13 @@
 from AuthAlpha.Non_Password_Hashing import NonPassHashing
 
 if __name__ == '__main__':
-    hash_list = NonPassHashing("algo").supported_hash_methods
-    print("List of supported hashes: ", hash_list)
+
+    try:
+        NonPassHashing("algo").supported_hash_methods
+    except TypeError:
+        print("Unsupported hash method")
+
+    hash_list = NonPassHashing("sha512").supported_hash_methods
 
     test_str = "MAYANk VATS"
 

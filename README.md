@@ -23,10 +23,7 @@ $ pip install AuthAlpha
   ```bash
   $ pip install bcrypt
     ```
-  ```bash
-  $ pip install scrypt
-    ```
-* `PBKDF2` and its dependencies are already in the in-built `hashlib` module.
+* `PBKDF2`, `scrypt` and their dependencies are already in the in-built `hashlib` module.
 
 * `OTPMethods.py` requires `pyotp` and `pycryptodome` packages to generate `TOTPs`.
   ```bash
@@ -64,6 +61,36 @@ Contributor names and contact info
 
 ## Version History
 See [commit history](https://github.com/Theorist-Git/AuthAlpha/commits/master)
+* **0.9.0a**
+  * Refactor: Harden security and improve hashing logic
+  * Class `PassHashing`
+      - `__init__` raises `TypeError` if an unsupported algorithm is
+        used.
+      - `generate_password_hash` now uses `os.urandom(n)` to generate
+        salts. More secure and much simpler.
+      - `generate_password_hash: scrypt` now uses `hashlib.scrypt`
+        which comes in-built with python instead of 3rd party
+        bindings.
+      - `check_password_hash` checks for algorithm are more idiomatic
+        now using `.startswith()` instead of `in "..."`.
+      - `check_password_hash`: refactored fragile checks to be more
+        idiomatic. Independent libraries used for generating are hash
+        are now used for checking hashes and not `generate_password_hash`
+        itself.
+      - Configurable params for all PassHashing algorithms via variatic arguments.
+
+  * Class `NonPassHashing`
+      - `generate_file_hash` uses `with open()` instead of `f = open()`
+      and then manual `close()`. Opening of files is now also wrapped in
+      `try: except: blocks`.
+
+  * Use of `==` is now deprecated across classes to check equality
+    of secrets which is vulnerable to timing attacks.
+    `hmac.compare_digest(buffer1, buffer2)` is used now.
+  
+  * Stricter error handling, formatting improvements
+  
+
 * **0.8.6a**
   *  `bcrypt` salts now do not need to be formatted to `AuthAlpha` style hashes.
   * Refactored code. Removed redundant code.
