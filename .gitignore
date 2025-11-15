@@ -1,7 +1,7 @@
 *.pyc
 .idea
 dist
-AuthAlpha.egg-info
+authalpha.egg-info
 MANIFEST
 setup.cfg
 setup.py

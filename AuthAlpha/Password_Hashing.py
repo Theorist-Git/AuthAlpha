@@ -48,8 +48,8 @@ class PassHashing:
         return "PassHashing('{}')".format(self.algorithm)
 
     def __str__(self):
-        return f"\033[1mPassword Hashing Class [PassHashing]\033[0m. \033[92mAlgorithm:\033[0m \033" \
-               f"[1m{self.algorithm}\033[0m "
+        return f"Password Hashing Class [PassHashing] Algorithm:" \
+               f"{self.algorithm}"
 
     def generate_password_hash(self, password: str, salt: bytes = None, **cost_params) -> str:
         """
@@ -63,7 +63,29 @@ class PassHashing:
 
         if self.algorithm == "argon2id":
             from argon2 import PasswordHasher
-            ph = PasswordHasher()
+            from argon2 import (
+                DEFAULT_TIME_COST,
+                DEFAULT_MEMORY_COST,
+                DEFAULT_PARALLELISM
+            )
+
+            default_params = {
+                "time_cost": DEFAULT_TIME_COST,
+                "memory_cost": DEFAULT_MEMORY_COST,
+                "parallelism": DEFAULT_PARALLELISM,
+            }
+
+            for key in cost_params:
+                if key not in default_params:
+                    raise TypeError(f"'{key}' is not a valid cost parameter for {self.algorithm}.")
+
+            final_params = default_params | cost_params
+
+            for param, value in cost_params.items():
+                if not value or not isinstance(value, int):
+                    raise TypeError(f"'{param}' is not a valid cost parameter for {self.algorithm}.")
+
+            ph = PasswordHasher(**final_params)
             return ph.hash(password)
 
         elif self.algorithm.startswith("pbkdf2:"):
