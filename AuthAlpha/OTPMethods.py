@@ -22,6 +22,12 @@ __version__ = "0.9.0alpha"
 
 """
 
+import base64
+from os import urandom
+from binascii import Error as Binascii_error
+
+PBKDF2_DKLEN = 32
+PBKDF2_ITERS = 310000
 
 class TwoFactorAuth:
 
@@ -29,7 +35,7 @@ class TwoFactorAuth:
         return "TwoFactorAuth()"
 
     def __str__(self):
-        return "\033[1mTwo Factor Authentication Class[TwoFactorAuth]\033[0m."
+        return "Two Factor Authentication Class[TwoFactorAuth]"
 
     @staticmethod
     def static_otp(otp_len: int = 6) -> str:
@@ -65,31 +71,42 @@ class TwoFactorAuth:
         return TOTP(token).verify(str(otp))
 
     @staticmethod
-    def encrypt(key: bytes, source: bytes, encode=True) -> str:
-        import base64
+    def encrypt(key: bytes, source: bytes) -> str:
         from Crypto.Cipher import AES
+        from Crypto.Protocol.KDF import PBKDF2
         from Crypto.Hash import SHA256
-        from Crypto import Random
-        key = SHA256.new(key).digest()  # use SHA-256 over our key to get a proper-sized AES key
-        IV = Random.new().read(AES.block_size)  # generate IV
-        encryptor = AES.new(key, AES.MODE_CBC, IV)
-        padding = AES.block_size - len(source) % AES.block_size  # calculate needed padding
-        source += bytes([padding]) * padding  # Python 2.x: source += chr(padding) * padding
-        data = IV + encryptor.encrypt(source)  # store the IV at the beginning and encrypt
-        return base64.b64encode(data).decode("latin-1") if encode else data
+
+        salt = urandom(16)
+        derived_key = PBKDF2(key.decode("utf-8"), salt, dkLen=PBKDF2_DKLEN, count=PBKDF2_ITERS, hmac_hash_module=SHA256)
+        cipher = AES.new(derived_key, AES.MODE_GCM)
+        ciphertext, tag = cipher.encrypt_and_digest(source)
+
+        packed_data = b"".join([salt, cipher.nonce, tag, ciphertext])
+
+        return base64.b64encode(packed_data).decode('latin-1')
 
     @staticmethod
-    def decrypt(key: bytes, source, decode=True) -> str:
-        import base64
+    def decrypt(key: bytes, source: str, decode=True) -> str:
         from Crypto.Cipher import AES
+        from Crypto.Protocol.KDF import PBKDF2
         from Crypto.Hash import SHA256
-        if decode:
-            source = base64.b64decode(source.encode("latin-1"))
-        key = SHA256.new(key).digest()  # use SHA-256 over our key to get a proper-sized AES key
-        IV = source[:AES.block_size]  # extract the IV from the beginning
-        decryptor = AES.new(key, AES.MODE_CBC, IV)
-        data = decryptor.decrypt(source[AES.block_size:])  # decrypt
-        padding = data[-1]  # pick the padding value from the end; Python 2.x: ord(data[-1])
-        if data[-padding:] != bytes([padding]) * padding:  # Python 2.x: chr(padding) * padding
-            raise ValueError("Invalid padding...")
-        return data[:-padding].decode('utf-8')  # remove the padding
+
+        try:
+            data = base64.b64decode(source.encode('latin-1'))
+            # Extract all the parts based on their known lengths
+            # Salt=16, Nonce=16 (GCM default), Tag=16 (GCM default)
+            salt, nonce, tag, ciphertext = data[:16], data[16:32], data[32:48], data[48:]
+            derived_key = PBKDF2(key.decode("utf-8"), salt, dkLen=PBKDF2_DKLEN, count=PBKDF2_ITERS, hmac_hash_module=SHA256)
+
+            cipher = AES.new(derived_key, AES.MODE_GCM, nonce=nonce)
+
+            # Decrypt and VERIFY.
+            # .decrypt_and_verify() will automatically check the 'tag'.
+            # If the tag is invalid (meaning the data was tampered with
+            # or the key is wrong), it will raise a ValueError.
+            plaintext_bytes = cipher.decrypt_and_verify(ciphertext, tag)
+
+            return plaintext_bytes.decode('utf-8')
+
+        except (ValueError, KeyError, Binascii_error):
+            raise ValueError("Error Decrypting")

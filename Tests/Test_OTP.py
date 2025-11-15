@@ -24,7 +24,7 @@ Press 3 to QUIT                     : """))
             static_otp = crypt.static_otp(otp_len=6)  # 123456
             print("Generated OTP:", static_otp)
 
-            hashed_otp = otp_police.generate_password_hash(static_otp, cost=50000)
+            hashed_otp = otp_police.generate_password_hash(static_otp, iterations=50000)
             print("Hashed OTP: ", hashed_otp, "\n")
 
             user_otp = int(input("Enter OTP to check against hash: "))
@@ -43,7 +43,7 @@ Press 3 to QUIT                     : """))
                A tuple is returned like so: (token, URL)
             """
 
-            secrets = crypt.totp(name="name", issuer_name="issuer_name")
+            secrets = crypt.totp(user_name="name", issuer_name="issuer_name")
             print("length 64 shared secret: ", secrets[0])
             print("URL object: ", secrets[1])
 
